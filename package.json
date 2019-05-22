@@ -1,0 +1,45 @@
+{
+  "name": "babimeh",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "test": "jest"
+  },
+  "dependencies": {
+    "expo": "^29.0.0",
+    "immutability-helper": "^2.7.1",
+    "immutable": "^3.8.2",
+    "native-base": "^2.8.0",
+    "react": "16.3.1",
+    "react-native": "^0.55.4",
+    "react-native-clean-form": "^0.5.0",
+    "react-native-elements": "^0.19.1",
+    "react-native-file-selector": "0.0.3",
+    "react-native-image-pan-zoom": "^2.1.8",
+    "react-native-image-picker": "^0.26.10",
+    "react-native-maps": "^0.21.0",
+    "react-native-retriable-fetch": "^2.0.0",
+    "react-native-vector-icons": "^5.0.0",
+    "react-navigation": "^2.9.3",
+    "react-redux": "^5.0.7",
+    "redux": "^4.0.0",
+    "redux-form": "^7.4.2",
+    "redux-immutablejs": "0.0.8"
+  },
+  "devDependencies": {
+    "babel-jest": "23.4.2",
+    "babel-preset-react-native": "^4",
+    "jest": "23.4.2",
+    "react-test-renderer": "16.3.1",
+    "ws": "3.3.2"
+  },
+  "jest": {
+    "preset": "react-native"
+  },
+  "rnpm": {
+    "assets": [
+      "./assets/fonts/"
+    ]
+  }
+}

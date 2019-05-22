@@ -1,0 +1,11 @@
+{
+  "name": "babimeh",
+  "displayName": "babimeh",
+  "expo": {
+	"name": "babimeh",
+    "slug": "babimeh",
+    "sdkVersion": "28.0.0",
+    "privacy": "public",
+  }
+  
+}

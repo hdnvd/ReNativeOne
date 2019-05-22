@@ -1,0 +1,15 @@
+{
+  "name": "babimeh",
+  "displayName": "babimeh",
+  "expo": {
+    "name": "babimeh",
+    "description": "This project is really great.",
+    "slug": "babimeh",
+    "privacy": "public",
+    "sdkVersion": "29.0.0",
+    "platforms": ["ios", "android"],
+    "version": "1.0.0",
+    "orientation": "portrait",
+	}
+  
+}
