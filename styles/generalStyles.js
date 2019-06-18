@@ -1,12 +1,58 @@
-import {StyleSheet} from "react-native";
+import {Dimensions, StyleSheet} from "react-native";
 
+let  Window= Dimensions.get('window');
 export default StyleSheet.create(
     {
+        input:
+            {
+                fontSize: 12,
+                minHeight: 36,
+                height:36,
+                textAlign:'right',
+                direction: 'rtl',
+                fontFamily: 'IRANSansMobile',
+                width: '94%',
+                marginHorizontal:'2%',
+                backgroundColor: "#ffffff",
+                borderRadius:5,
+                marginTop: '2%',
+                borderWidth: 1,
+                borderColor:"#ff0000"
+            },
+        inputLabel:
+            {
+                fontSize: 12,
+                textAlign:'right',
+                direction: 'rtl',
+                fontFamily: 'IRANSansMobile',
+                width: '94%',
+                marginHorizontal:'2%',
+                marginTop: '2%',
+            },
         container:
             {
                 flex:1,
                 flexGrow: 1,
+                backgroundColor:"#fcfcfc",
+
             },
+        mapContainer:
+            {
+
+                width: '100%',
+                height: Window.height/3,
+            },
+        map:
+            {
+                width: '100%',
+                height: '100%',
+            },
+        listcontainer:{
+
+            flex:1,
+            flexGrow: 1,
+            backgroundColor:"#eeeeee",
+        },
         text:
             {
 
@@ -34,7 +80,7 @@ export default StyleSheet.create(
             {
 
                 width: '100%',
-                height: '20%',
+                height: Window.height/5,
             },
         row:
             {
@@ -45,10 +91,12 @@ export default StyleSheet.create(
 
         saveButton:
             {
-                borderRadius:30,
-                minHeight: 60,
-                width:'100%',
-                backgroundColor:"rgba(92, 99,216, 1)",
+                borderRadius:5,
+                minHeight: 35,
+                height: 35,
+                width:'84%',
+                marginHorizontal:'8%',
+                backgroundColor:"#ee1f25",
                 alignSelf:'center',
             },
         saveButtonText:
@@ -57,6 +105,8 @@ export default StyleSheet.create(
                 textAlignVertical:'center',
                 textAlign:'center',
                 paddingVertical: 10,
+                fontSize: 13,
+                color: '#ffffff',
             },
         cautionContainer:
             {
@@ -105,6 +155,47 @@ export default StyleSheet.create(
                 textAlign: 'center',
                 fontFamily: 'IRANSansMobile',
                 fontSize: 13,
+            },
+        ListItem: {
+            justifyContent: 'center',
+            paddingTop: 30,
+            paddingHorizontal:10,
+            borderRadius: 2,
+            backgroundColor:"#ffffff",
+            fontFamily: 'IRANSansMobile',
+            fontSize: 13,
+            direction: 'rtl',
+            marginTop:1,
+        },
+        simplelabel:
+            {
+                direction: 'rtl',
+                fontFamily: 'IRANSansMobile',
+                textAlign:'right',
+            },
+        listitemthumbnail:
+            {
+                width:'20%',
+                aspectRatio: 1,
+                position: 'absolute',
+                borderRadius:5,
+                left:'1%',
+
+            },
+        searchbar:
+            {
+
+            },
+        searchbarinput:
+            {
+                fontSize: 12,
+                minHeight: 36,
+                height:36,
+                textAlign:'right',
+                direction: 'rtl',
+                fontFamily: 'IRANSansMobile',
+                width: '100%',
+                backgroundColor: "#ffffff",
             },
     }
 

@@ -16,18 +16,18 @@ export default class SelectLocation extends Component<{}> {
   state=
   {
       selectedLocation:{
-          latitude: parseFloat(global.SelectedLocation.latitude),
-          longitude: parseFloat(global.SelectedLocation.longitude),
+          latitude: parseFloat(global.SelectedLocation!=null?global.SelectedLocation.latitude:35.6892),
+          longitude: parseFloat(global.SelectedLocation!=null?global.SelectedLocation.longitude:51.3890),
           latitudeDelta: 0.01,
           longitudeDelta: 0.01,
         }
-  }
+  };
 
 onSelect= () =>
 {
     const {goBack} = this.props.navigation;
       goBack();
-}
+};
   OnRelocate= () =>
   {
       navigator.geolocation.getCurrentPosition(pos=>{
@@ -48,7 +48,7 @@ onSelect= () =>
     {
       timeout:10000
     });
-  }
+  };
   onRegionChange= (region) =>
   {
       this.setState(
@@ -57,7 +57,7 @@ onSelect= () =>
       });
   }
   static navigationOptions = {
-      headerTitle: <LogoTitle />,
+      headerTitle: null,
     };
   render() {
     return (

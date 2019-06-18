@@ -98,7 +98,7 @@ export default class FormView extends Component<{}> {
                     });
                 }
                 this.setState({
-                    provinceOptions: placesArray.map(place=><Picker.Item label={place.label} value={place.value}   style={styles.pickerItem}/>)
+                    provinceOptions: placesArray.map(place=><Picker.Item label={place.label} value={place.value} style={styles.pickerItem}/>)
                 });
             })
             .catch(err => Alert.alert("لطفا اتصال اینترنت خود را بررسی کنید"));

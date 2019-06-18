@@ -15,8 +15,8 @@ const SelectorMap=props=>{
   <MapView
    style={styles.map}
     initialRegion={{
-      latitude: global.SelectedLocation.latitude,
-      longitude: global.SelectedLocation.longitude,
+      latitude:global.SelectedLocation!=null? global.SelectedLocation.latitude:35.6892,
+      longitude: global.SelectedLocation!=null? global.SelectedLocation.longitude:51.3890,
       latitudeDelta: 0.01,
       longitudeDelta: 0.01,
     }}
@@ -35,7 +35,7 @@ const SelectorMap=props=>{
               global.SelectedLocation = {
                   latitude: e.nativeEvent.coordinate.latitude,
                   longitude: e.nativeEvent.coordinate.longitude,
-                }
+                };
               props.onSelect();
             // Alert.alert(e.nativeEvent.coordinate.latitude+"")
           }
