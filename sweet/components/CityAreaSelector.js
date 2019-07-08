@@ -55,24 +55,29 @@ export default class CityAreaSelector extends Component<{}> {
                         selectedValue ={this.state.selectedCityValue}
                         onValueChange={(CityID,index)=>{
                             this.setState({selectedCityValue:CityID});
-                            this.placemanager.loadAreaOptions(this.state.selectedProvinceValue,CityID);}}
+                            this.placemanager.loadAreaOptions(this.state.selectedProvinceValue,CityID);
+                            if(this.props.onCitySelected!=null)
+                                this.props.onCitySelected(CityID);
+                        }}
                 >
                     {this.state.cityOptions}
                 </Picker>
             </View>
-            <View>
-                <Text style={generalStyles.inputLabel}>منطقه</Text>
-                <Picker style={generalStyles.select}
-                        name='placemanareas'
-                        selectedValue ={this.state.selectedAreaValue}
-                        onValueChange={(AreaID, index) => {
-                            this.setState({selectedAreaValue: AreaID});
-                            this.props.onAreaSelected(AreaID);
-                        }}
-                >
-                    {this.state.areaOptions}
-                </Picker>
-            </View>
+            {(this.props.displayAreaSelect == null || this.props.displayAreaSelect == true) &&
+                <View>
+                    <Text style={generalStyles.inputLabel}>منطقه</Text>
+                    <Picker style={generalStyles.select}
+                            name='placemanareas'
+                            selectedValue={this.state.selectedAreaValue}
+                            onValueChange={(AreaID, index) => {
+                                this.setState({selectedAreaValue: AreaID});
+                                this.props.onAreaSelected(AreaID);
+                            }}
+                    >
+                        {this.state.areaOptions}
+                    </Picker>
+                </View>
+            }
         </View>);
     }
 }

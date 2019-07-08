@@ -24,10 +24,11 @@ export default class Splash extends Component<{}> {
         // Start counting when the page is loaded
 
         this.timeoutHandle = setTimeout(()=>{
-            if(global.usertype==1)
-                this.props.navigation.dispatch(Navigation.resetNavigationAndNavigate('Login'));
-            else if(global.usertype==3)
-                this.props.navigation.dispatch(Navigation.resetNavigationAndNavigate('MapPage'));
+            // if(global.usertype==1)
+            this.props.navigation.dispatch(Navigation.resetNavigationAndNavigate('Login'));
+                // this.props.navigation.dispatch(Navigation.resetNavigationAndNavigate('Login'));
+            // else if(global.usertype==3)
+            //     this.props.navigation.dispatch(Navigation.resetNavigationAndNavigate('MapPage'));
         }, 3000);
     }
 
@@ -48,7 +49,7 @@ export default class Splash extends Component<{}> {
             return(
                 <View style={styles.container}>
                     <Image source={require('../images/LogoWhite.png')} style={styles.img} resizeMode={'stretch'}/>
-                    <Text style={styles.centerText}>نزدیکترین نمایندگی بیمه رو پیدا کن</Text>
+                    {/*<Text style={styles.centerText}>Travel App</Text>*/}
                 </View>
             );
         }
@@ -57,23 +58,23 @@ export default class Splash extends Component<{}> {
             return(
                 <View style={styles.container}>
                     <Image source={require('../images/LogoWhite.png')} style={styles.img} resizeMode={'stretch'}/>
-                    <View style={styles.row}>
-                    <Button title="کاربر" underlineColorAndroid={'transparent'}  buttonStyle={styles.saveButton}  textStyle={styles.saveButtonText}  onPress={()=>{
-                        global.usertype=3;
-                        this.props.navigation.dispatch(Navigation.resetNavigationAndNavigate('MapPage'));}
-                    }/>
-                    </View>
-                    <View style={styles.row}>
-                    <Button title="نماینده" underlineColorAndroid={'transparent'}  buttonStyle={styles.saveButton}  textStyle={styles.saveButtonText} onPress={()=>{
-                        global.usertype=1;
-                        this.props.navigation.dispatch(Navigation.resetNavigationAndNavigate('Login'));
-                    }}/>
-                    </View><View style={styles.row}>
-                    <Button title="مدیر" underlineColorAndroid={'transparent'}  buttonStyle={styles.saveButton}  textStyle={styles.saveButtonText} onPress={()=>{
-                        global.usertype=2;
-                        this.props.navigation.dispatch(Navigation.resetNavigationAndNavigate('MapPage'));}
-                    }/>
-                </View>
+                    {/*<View style={styles.row}>*/}
+                    {/*<Button title="کاربر" underlineColorAndroid={'transparent'}  buttonStyle={styles.saveButton}  textStyle={styles.saveButtonText}  onPress={()=>{*/}
+                        {/*global.usertype=3;*/}
+                        {/*this.props.navigation.dispatch(Navigation.resetNavigationAndNavigate('MapPage'));}*/}
+                    {/*}/>*/}
+                    {/*</View>*/}
+                    {/*<View style={styles.row}>*/}
+                    {/*<Button title="نماینده" underlineColorAndroid={'transparent'}  buttonStyle={styles.saveButton}  textStyle={styles.saveButtonText} onPress={()=>{*/}
+                        {/*global.usertype=1;*/}
+                        {/*this.props.navigation.dispatch(Navigation.resetNavigationAndNavigate('Login'));*/}
+                    {/*}}/>*/}
+                    {/*</View><View style={styles.row}>*/}
+                    {/*<Button title="مدیر" underlineColorAndroid={'transparent'}  buttonStyle={styles.saveButton}  textStyle={styles.saveButtonText} onPress={()=>{*/}
+                        {/*global.usertype=2;*/}
+                        {/*this.props.navigation.dispatch(Navigation.resetNavigationAndNavigate('MapPage'));}*/}
+                    {/*}/>*/}
+                {/*</View>*/}
                 </View>
             );
         }
@@ -106,7 +107,7 @@ const styles = StyleSheet.create(
         container:
             {
 
-                backgroundColor: "#16a091",
+                backgroundColor: "#ffffff",
                 height:'100%',
                 width:'100%',
                 justifyContent: 'center',
@@ -121,7 +122,7 @@ const styles = StyleSheet.create(
             },
         centerText:
             {
-                color:"#ffffff",
+                color:"#051841",
                 fontFamily: 'IRANSansMobile',
                 textAlign:'center',
                 height:60,

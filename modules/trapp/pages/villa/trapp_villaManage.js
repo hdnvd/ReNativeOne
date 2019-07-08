@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { CheckBox , Button } from 'react-native-elements';
+import { CheckBox } from 'react-native-elements';
 import {StyleSheet, View, Alert, TextInput, ScrollView, Dimensions,AsyncStorage,Picker,Text,Image } from 'react-native';
 import generalStyles from '../../../../styles/generalStyles';
 import SweetFetcher from '../../../../classes/sweet-fetcher';
@@ -12,6 +12,7 @@ import TimeSelector from '../../../../sweet/components/TimeSelector';
 import ImageSelector from '../../../../sweet/components/ImageSelector';
 import LocationSelector from '../../../../sweet/components/LocationSelector';
 import CityAreaSelector from '../../../../sweet/components/CityAreaSelector';
+import SweetButton from '../../../../sweet/components/SweetButton';
 import CheckedRow from '../../../../sweet/components/CheckedRow';
 import ComponentHelper from '../../../../classes/ComponentHelper';
 
@@ -23,6 +24,11 @@ export default class  trapp_villaManage extends Component<{}> {
         {
             isLoading:false,
             
+			roomcountnum:'',
+			capacitynum:'',
+			maxguestsnum:'',
+			structureareanum:'',
+			totalareanum:'',
 			SelectedplacemanplaceValue:'-1',
 			addedbyowner:0,
 			SelectedviewtypeValue:'-1',
@@ -32,12 +38,16 @@ export default class  trapp_villaManage extends Component<{}> {
 			SelectedareatypeValue:'-1',
 			descriptionte:'',
 			SelecteddocumentphotoiguLocation:'',
+			normalpriceprc:'',
+			holidaypriceprc:'',
+			weeklyoffnum:'',
+			monthlyoffnum:'',
             
-			placemanplaceOptions:[<Picker.Item label='محل' value='-1' style={generalStyles.pickerItem} />],
-			viewtypeOptions:[<Picker.Item label='چشم انداز' value='-1' style={generalStyles.pickerItem} />],
-			structuretypeOptions:[<Picker.Item label='نوع ساختمان' value='-1' style={generalStyles.pickerItem} />],
-			owningtypeOptions:[<Picker.Item label='نوع اقامتگاه' value='-1' style={generalStyles.pickerItem} />],
-			areatypeOptions:[<Picker.Item label='بافت' value='-1' style={generalStyles.pickerItem} />],
+			placemanplaceOptions:null,
+			viewtypeOptions:null,
+			structuretypeOptions:null,
+			owningtypeOptions:null,
+			areatypeOptions:null,
         };
         
         this.loadData();
@@ -60,36 +70,31 @@ export default class  trapp_villaManage extends Component<{}> {
 
     loadPlacemanplaces = () => {
         new SweetFetcher().Fetch('/placeman/place',SweetFetcher.METHOD_GET, null, data => {
-            let placemanplaces=data.Data.map(dt=>{return <Picker.Item label={dt.title} value={dt.id} style={generalStyles.pickerItem} />});
-            this.setState({placemanplaceOptions:placemanplaces});
+            this.setState({placemanplaceOptions:data.Data});
         });
     };
                 
     loadViewtypes = () => {
         new SweetFetcher().Fetch('/trapp/viewtype',SweetFetcher.METHOD_GET, null, data => {
-            let viewtypes=data.Data.map(dt=>{return <Picker.Item label={dt.name} value={dt.id} style={generalStyles.pickerItem} />});
-            this.setState({viewtypeOptions:viewtypes});
+            this.setState({viewtypeOptions:data.Data});
         });
     };
                 
     loadStructuretypes = () => {
         new SweetFetcher().Fetch('/trapp/structuretype',SweetFetcher.METHOD_GET, null, data => {
-            let structuretypes=data.Data.map(dt=>{return <Picker.Item label={dt.name} value={dt.id} style={generalStyles.pickerItem} />});
-            this.setState({structuretypeOptions:structuretypes});
+            this.setState({structuretypeOptions:data.Data});
         });
     };
                 
     loadOwningtypes = () => {
         new SweetFetcher().Fetch('/trapp/owningtype',SweetFetcher.METHOD_GET, null, data => {
-            let owningtypes=data.Data.map(dt=>{return <Picker.Item label={dt.name} value={dt.id} style={generalStyles.pickerItem} />});
-            this.setState({owningtypeOptions:owningtypes});
+            this.setState({owningtypeOptions:data.Data});
         });
     };
                 
     loadAreatypes = () => {
         new SweetFetcher().Fetch('/trapp/areatype',SweetFetcher.METHOD_GET, null, data => {
-            let areatypes=data.Data.map(dt=>{return <Picker.Item label={dt.name} value={dt.id} style={generalStyles.pickerItem} />});
-            this.setState({areatypeOptions:areatypes});
+            this.setState({areatypeOptions:data.Data});
         });
     };
                 
@@ -100,20 +105,20 @@ export default class  trapp_villaManage extends Component<{}> {
                     <ScrollView contentContainerStyle={{minHeight: this.height || heightOfDeviceScreen}}>
                         <View style={generalStyles.container}>
                         
-                            <TextBox keyboardType='numeric' title={'roomcount_num'} value={this.state.roomcountnum} onChangeText={(text) => {this.setState({roomcountnum: text});}}/>
-                            <TextBox keyboardType='numeric' title={'capacity_num'} value={this.state.capacitynum} onChangeText={(text) => {this.setState({capacitynum: text});}}/>
-                            <TextBox keyboardType='numeric' title={'maxguests_num'} value={this.state.maxguestsnum} onChangeText={(text) => {this.setState({maxguestsnum: text});}}/>
-                            <TextBox keyboardType='numeric' title={'structurearea_num'} value={this.state.structureareanum} onChangeText={(text) => {this.setState({structureareanum: text});}}/>
-                            <TextBox keyboardType='numeric' title={'totalarea_num'} value={this.state.totalareanum} onChangeText={(text) => {this.setState({totalareanum: text});}}/>
-                            <PickerBox
-                                name={'placemanplaces'}
-                                title={'محل'}
-                                selectedValue ={this.state.SelectedplacemanplaceValue}
-                                onValueChange={(value, index) => {
-                                    this.setState({SelectedplacemanplaceValue: value});
-                                }}
-                                options={this.state.placemanplaceOptions}
-                            />
+                            <TextBox keyboardType='numeric' title={'تعداد اتاق'} value={this.state.roomcountnum} onChangeText={(text) => {this.setState({roomcountnum: text});}}/>
+                            <TextBox keyboardType='numeric' title={'ظرفیت به نفر'} value={this.state.capacitynum} onChangeText={(text) => {this.setState({capacitynum: text});}}/>
+                            <TextBox keyboardType='numeric' title={'حداکثر تعداد مهمان'} value={this.state.maxguestsnum} onChangeText={(text) => {this.setState({maxguestsnum: text});}}/>
+                            <TextBox keyboardType='numeric' title={'متراژ بنا'} value={this.state.structureareanum} onChangeText={(text) => {this.setState({structureareanum: text});}}/>
+                            <TextBox keyboardType='numeric' title={'متراژ کل'} value={this.state.totalareanum} onChangeText={(text) => {this.setState({totalareanum: text});}}/>
+                            {/*<PickerBox*/}
+                                {/*name={'placemanplaces'}*/}
+                                {/*title={'محل'}*/}
+                                {/*selectedValue ={this.state.SelectedplacemanplaceValue}*/}
+                                {/*onValueChange={(value, index) => {*/}
+                                    {/*this.setState({SelectedplacemanplaceValue: value});*/}
+                                {/*}}*/}
+                                {/*options={this.state.placemanplaceOptions}*/}
+                            {/*/>*/}
                             <CheckedRow title='دارای سند مالکیت به نام کاربر' checked={this.state.addedbyowner}
                             onPress={() => this.setState({addedbyowner: this.state.addedbyowner==0?1:0})}
                             />
@@ -159,12 +164,12 @@ export default class  trapp_villaManage extends Component<{}> {
                             />
                             <TextBox title={'توضیحات'} value={this.state.descriptionte} onChangeText={(text) => {this.setState({descriptionte: text});}}/>
                             <ImageSelector title='انتخاب سند مالکیت' onConfirm={(path)=>this.setState({SelecteddocumentphotoiguLocation : path})} />
-                            <TextBox keyboardType='numeric' title={'normalprice_prc'} value={this.state.normalpriceprc} onChangeText={(text) => {this.setState({normalpriceprc: text});}}/>
-                            <TextBox keyboardType='numeric' title={'holidayprice_prc'} value={this.state.holidaypriceprc} onChangeText={(text) => {this.setState({holidaypriceprc: text});}}/>
-                            <TextBox keyboardType='numeric' title={'weeklyoff_num'} value={this.state.weeklyoffnum} onChangeText={(text) => {this.setState({weeklyoffnum: text});}}/>
-                            <TextBox keyboardType='numeric' title={'monthlyoff_num'} value={this.state.monthlyoffnum} onChangeText={(text) => {this.setState({monthlyoffnum: text});}}/>
+                            <TextBox keyboardType='numeric' title={'قیمت در روزهای عادی'} value={this.state.normalpriceprc} onChangeText={(text) => {this.setState({normalpriceprc: text});}}/>
+                            <TextBox keyboardType='numeric' title={'قیمت در روزهای تعطیل'} value={this.state.holidaypriceprc} onChangeText={(text) => {this.setState({holidaypriceprc: text});}}/>
+                            <TextBox keyboardType='numeric' title={'تخفیف رزرو بیش از یک هفته'} value={this.state.weeklyoffnum} onChangeText={(text) => {this.setState({weeklyoffnum: text});}}/>
+                            <TextBox keyboardType='numeric' title={'تخفیف رزرو بیش از یک ماه'} value={this.state.monthlyoffnum} onChangeText={(text) => {this.setState({monthlyoffnum: text});}}/>
                             <View  style={{marginTop: '3%'}}>
-                                <Button title='ذخیره' iconPlacement='right' underlineColorAndroid={'transparent'} buttonStyle={generalStyles.saveButton}  textStyle={generalStyles.saveButtonText}  onPress={(e) => {
+                                <SweetButton title='ذخیره' onPress={(e) => {
                                     let formIsValid=true;
                                     if(formIsValid)
                                     {
@@ -188,7 +193,8 @@ export default class  trapp_villaManage extends Component<{}> {
 									data.append('maxguestsnum', this.state.maxguestsnum);
 									data.append('structureareanum', this.state.structureareanum);
 									data.append('totalareanum', this.state.totalareanum);
-									data.append('placemanplace', this.state.SelectedplacemanplaceValue);
+									if(global.placeId>0)
+									    data.append('placemanplace', global.placeId);
 									data.append('addedbyowner', this.state.addedbyowner);
 									data.append('viewtype', this.state.SelectedviewtypeValue);
 									data.append('structuretype', this.state.SelectedstructuretypeValue);

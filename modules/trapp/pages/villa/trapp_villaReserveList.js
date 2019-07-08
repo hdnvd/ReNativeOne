@@ -8,7 +8,7 @@ import TextBox from '../../../../sweet/components/TextBox';
 import PersianCalendarPicker from "react-native-persian-calendar-picker";
 import jMoment from "moment-jalaali";
 import TextRow from "../../../../sweet/components/TextRow";
-export default class  trapp_villaReserve extends Component<{}> {
+export default class  trapp_villaReserveList extends Component<{}> {
 
     constructor(props) {
         super(props);

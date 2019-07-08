@@ -1,7 +1,5 @@
 <resources>
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:spinnerItemStyle">@style/SpinnerItem</item>
-        <item name="android:spinnerDropDownItemStyle">@style/SpinnerDropDownItem</item>
     </style>
 
     <style name="SpinnerItem" parent="Theme.AppCompat.Light.NoActionBar">>

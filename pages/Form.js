@@ -695,7 +695,7 @@ const styles = StyleSheet.create(
             },
         pickerItem:
             {
-                color:"#ffffff"
+                color:"#ffffff",
             },
         pickerText:
             {

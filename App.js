@@ -7,7 +7,9 @@ import ManageBranch from './pages/ManageBranch'
 import Login from './modules/users/pages/Login'
 import sas_unitManage from './modules/sas/pages/unit/sas_unitManage'
 import trapp_villaownerManage from './modules/trapp/pages/villaowner/trapp_villaownerManage'
+import trapp_villaReservationInfo from './modules/trapp/pages/villa/trapp_villaReservationInfo'
 import trapp_villaManage from './modules/trapp/pages/villa/trapp_villaManage'
+import trapp_orderList from './modules/trapp/pages/order/trapp_orderList'
 import trapp_villaView from './modules/trapp/pages/villa/trapp_villaView'
 import trapp_villaReserve from './modules/trapp/pages/villa/trapp_villaReserve'
 import placeman_placeManage from './modules/placeman/pages/place/placeman_placeManage'
@@ -27,8 +29,11 @@ YellowBox.ignoreWarnings(['Warning: ReactNative.createElement']);
 YellowBox.ignoreWarnings(['Warning: ReactNative.IsMounted']);
 console.disableYellowBox = true;
 const App = createStackNavigator({
+    Splash: {screen: Splash},
     Login: {screen: Login},
     trapp_villaownerManage: {screen: trapp_villaownerManage},
+    trapp_villaReservationInfo: {screen: trapp_villaReservationInfo},
+    trapp_orderList: {screen: trapp_orderList},
     trapp_villaManage: {screen: trapp_villaManage},
     placeman_placeManage: {screen: placeman_placeManage},
     placeman_placeView: {screen: placeman_placeView},
@@ -39,7 +44,6 @@ const App = createStackNavigator({
     trapp_villaList: {screen: trapp_villaList},
     sas_unitList: {screen: sas_unitList},
     sas_unitManage: {screen: sas_unitManage},
-    Splash: {screen: Splash},
     MapPage: {screen: MapPage},
     posts__posts_postManage: {screen: posts__posts_postManage},
     DisplayPlace: {screen: DisplayPlace},

@@ -3,21 +3,26 @@ import React, { Component } from 'react';
 import {Text,StyleSheet,View,Alert,Image,TouchableHighlight} from 'react-native';
 import Navigation from "../classes/navigation";
 class LogoTitle extends Component {
+    toggleDrawer = () => {
+        //Props to open/close the drawer
+        this.props.navigationProps.toggleDrawer();
+    };
   render() {
+
   if(this.props.isindex==1) {
 
       if (global.usertype == 1)
       {
           return (
               <View style={styles.topBar}>
-                  <TouchableHighlight onPress={this.props.Profile} style={styles.imgContainer} activeOpacity={0.3}
+                  <TouchableHighlight onPress={this.props.onReserveListClick} style={styles.imgContainer} activeOpacity={0.3}
                                       underlayColor='#eee'>
-                      <Image source={require('../images/profile.png')} style={styles.img} resizeMode={'stretch'}/>
+                      <Image source={require('../images/reserve.png')} style={styles.img} resizeMode={'stretch'}/>
                   </TouchableHighlight>
-                  <Text style={styles.toptext}>بابیمه</Text>
-                  <TouchableHighlight onPress={this.props.onRechargeClick} style={[styles.imgContainerRight]}
+                  <Text style={styles.toptext}>Trapp</Text>
+                  <TouchableHighlight onPress={this.props.onFindClick} style={[styles.imgContainerRight]}
                                       activeOpacity={0.3} underlayColor='#eee'>
-                      <Image source={require('../images/money.png')} style={styles.img} resizeMode={'stretch'}/>
+                      <Image source={require('../images/find.png')} style={styles.img} resizeMode={'stretch'}/>
                   </TouchableHighlight>
               </View>
           );
@@ -78,7 +83,7 @@ const styles=StyleSheet.create(
   {
     width:'100%',
     height:'100%',
-    backgroundColor: "#16a091",
+    backgroundColor: "#15be29",
     alignItems: 'center',
     justifyContent: 'center'
   },

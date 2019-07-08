@@ -17,7 +17,7 @@ export default StyleSheet.create(
                 borderRadius:5,
                 marginTop: '2%',
                 borderWidth: 1,
-                borderColor:"#ff0000"
+                borderColor:"#15be29"
             },
         inputLabel:
             {
@@ -96,7 +96,7 @@ export default StyleSheet.create(
                 height: 35,
                 width:'84%',
                 marginHorizontal:'8%',
-                backgroundColor:"#ee1f25",
+                backgroundColor:"#051841",
                 alignSelf:'center',
             },
         saveButtonText:
@@ -197,6 +197,32 @@ export default StyleSheet.create(
                 width: '100%',
                 backgroundColor: "#ffffff",
             },
+        select:
+            {
+                lineHeight: 40,
+                fontSize: 17,
+                minHeight: 40,
+                direction: 'rtl',
+                textAlign: 'center',
+                fontFamily: 'IRANSansMobile',
+                width:'100%',
+                height: 50,
+                color: '#000000',
+            },
+        pickerItem:
+            {
+                color:"#ffffff",
+                fontFamily: 'IRANSansMobile',
+            },
+        pickerText:
+            {
+                color:'#ffffff',
+                direction: 'rtl',
+                textAlign: 'center',
+                fontFamily: 'IRANSansMobile',
+                fontSize: 20,
+
+            }
     }
 
 );

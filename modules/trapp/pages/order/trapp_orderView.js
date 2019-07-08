@@ -10,7 +10,7 @@ import SweetButton from '../../../../sweet/components/SweetButton';
 import ComponentHelper from '../../../../classes/ComponentHelper';
 import SimpleMap from '../../../../components/SimpleMap';
 
-export default class  placeman_placeView extends Component<{}> {
+export default class  trapp_orderView extends Component<{}> {
     
     constructor(props) {
         super(props);
@@ -18,14 +18,13 @@ export default class  placeman_placeView extends Component<{}> {
             {
                 isLoading:false,
                 LoadedData:{
-                title:'',
-                    provinceinfo:{},
-                    cityinfo:{},
-                    areainfo:{},
-                address:'',
-                    latitude:0.0,
-                    longitude:0.0,
-                description:'',
+                priceprc:'',
+                    reservefinancetransactioninfo:{},
+                    cancelfinancetransactioninfo:{},
+                    villainfo:{},
+                    orderstatusinfo:{},
+                startdate:'',
+                durationnum:'',
                     userinfo:{},
                 },
                 
@@ -35,7 +34,7 @@ export default class  placeman_placeView extends Component<{}> {
     }
     loadData=()=>{
         this.setState({isLoading:true});
-        new SweetFetcher().Fetch('/placeman/place/'+global.itemID,SweetFetcher.METHOD_GET, null, data => {
+        new SweetFetcher().Fetch('/trapp/order/'+global.itemID,SweetFetcher.METHOD_GET, null, data => {
             this.setState({LoadedData:data.Data,isLoading:false});
         });
 
@@ -49,16 +48,13 @@ export default class  placeman_placeView extends Component<{}> {
                     
                         <View style={generalStyles.container}>
                         
-                          <Image style={generalStyles.topimage} source={{uri: Constants.ServerURL+'/'+this.state.LoadedData.logoigu}}/>
-
-                            <TextRow title={'عنوان'} content={this.state.LoadedData.title} />
-                            <TextRow title={'محل'} content={this.state.LoadedData.provinceinfo.title+' - '+this.state.LoadedData.cityinfo.title+' - '+this.state.LoadedData.areainfo.title} />
-                            <TextRow title={'آدرس'} content={this.state.LoadedData.address} />
-                            <TextRow title={'توضیحات'} content={this.state.LoadedData.description} />
-                            {this.state.LoadedData.active==1 && <TextRow title={''} content={'فعال/غیرفعال'} />}
-                            <View style={generalStyles.mapContainer}>
-                                <SimpleMap style={generalStyles.map} latitude={parseFloat(this.state.LoadedData.latitude)+0} longitude={parseFloat(this.state.LoadedData.longitude)+0} />
-                            </View>
+                            <TextRow title={'price_prc'} content={this.state.LoadedData.priceprc} />
+                            <TextRow title={'reserve__finance_transaction_fid'} content={this.state.LoadedData.reservefinancetransactioninfo.name} />
+                            <TextRow title={'cancel__finance_transaction_fid'} content={this.state.LoadedData.cancelfinancetransactioninfo.name} />
+                            <TextRow title={'villa_fid'} content={this.state.LoadedData.villainfo.name} />
+                            <TextRow title={'orderstatus_fid'} content={this.state.LoadedData.orderstatusinfo.name} />
+                            <TextRow title={'start_date'} content={this.state.LoadedData.startdate} />
+                            <TextRow title={'duration_num'} content={this.state.LoadedData.durationnum} />
                         </View>
                     </ScrollView>
                 </View>

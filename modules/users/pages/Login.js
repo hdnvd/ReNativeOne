@@ -13,6 +13,8 @@ import { Button } from 'react-native-elements';
 import generalStyles from '../../../styles/generalStyles'
 import SweetFetcher from "../../../classes/sweet-fetcher";
 import Common from "../../../classes/Common";
+import Constants from "../../../classes/Constants";
+import TrappUser from "../../trapp/classes/TrappUser";
 
 export default class Login extends Component<{}> {
 
@@ -56,7 +58,8 @@ export default class Login extends Component<{}> {
                     <Button  title="ارسال کد تایید" iconPlacement="right" underlineColorAndroid={'transparent'}  buttonStyle={generalStyles.saveButton}  textStyle={generalStyles.saveButtonText} onPress={(e) => {
                         const data = new FormData();
                         data.append('phone', this.state.phone);
-                        data.append('appName', 'Panel');
+                        data.append('appName', Constants.AppName);
+                        data.append('role', Constants.DefaultRole);
                         new SweetFetcher().Fetch('/users/sendverificationcode', SweetFetcher.METHOD_POST, data, data => {
                             alert("کد تایید به شماره موبایل شما ارسال شد.");
                         }, null, 'users', 'sendverificationcode', this.props.history);
@@ -73,12 +76,13 @@ export default class Login extends Component<{}> {
                                 data.append('phone', this.state.phone);
                                 data.append('code', this.state.Password);
                                 data.append('forceLogin', true);
-                                data.append('appName', 'Panel');
+                                data.append('appName', Constants.AppName);
+                                data.append('role', Constants.DefaultRole);
                                 new SweetFetcher().Fetch('/users/loginbyphone', SweetFetcher.METHOD_POST, data, data => {
                                     console.log(data);
 
                                     let RolePart=['userroles',''];
-                                    if(data.Data.roles.empty)
+                                    if(!data.Data.roles.empty)
                                         RolePart=['userroles',data.Data.roles[0]];
 
                                     let AsyncStorageObject=[['sessionkey',data.Data.sessionkey],RolePart];
@@ -98,7 +102,7 @@ export default class Login extends Component<{}> {
                                             UserMan.SaveToken(data.Data.sessionkey);
                                             this.setState({'token': data.Data.sessionkey});
                                             global.isnewprofile=false;
-                                            this.props.navigation.dispatch(Navigation.resetNavigationAndNavigate('trapp_villaManage'));
+                                            TrappUser.navigateToUserStartPage(this.props.navigation);
                                         }
                                         else
                                             alert("اطلاعات کاربری صحیح نمی باشد.");
@@ -116,7 +120,7 @@ export default class Login extends Component<{}> {
         else
         {
             global.isnewprofile=false;
-            this.props.navigation.dispatch(Navigation.resetNavigationAndNavigate('trapp_villaList'));
+            TrappUser.navigateToUserStartPage(this.props.navigation);
             return(<View/>);
         }
 
