@@ -15,23 +15,29 @@ import CityAreaSelector from '../../../../sweet/components/CityAreaSelector';
 import SweetButton from '../../../../sweet/components/SweetButton';
 import CheckedRow from '../../../../sweet/components/CheckedRow';
 import ComponentHelper from '../../../../classes/ComponentHelper';
+import LogoTitle from "../../../../components/LogoTitle";
 
 export default class  placeman_placeManage extends Component<{}> {
-    
+    static navigationOptions =({navigation}) => {
+        return {
+            headerLeft: null,
+            headerTitle: <LogoTitle title={'اطلاعات محل ویلا'} />
+        };
+    };
     constructor(props) {
         super(props);
         this.state =
         {
             isLoading:false,
-            
+
 			title:'',selectedAreaValue: -1,
 			address:'',
 			SelectedlogoiguLocation:'',
 			description:'',
 			active:0,
-            
+
         };
-        
+
         this.loadData();
     }
     loadData=()=>{
@@ -51,7 +57,7 @@ export default class  placeman_placeManage extends Component<{}> {
                 <View style={{flex:1}}  >
                     <ScrollView contentContainerStyle={{minHeight: this.height || heightOfDeviceScreen}}>
                         <View style={generalStyles.container}>
-                        
+
                             {/*<TextBox title={'عنوان'} value={this.state.title} onChangeText={(text) => {this.setState({title: text});}}/>*/}
                             <CityAreaSelector
                                 onAreaSelected={(AreaID)=>this.setState({selectedAreaValue: AreaID})}
@@ -75,14 +81,14 @@ export default class  placeman_placeManage extends Component<{}> {
                                         let action=AccessManager.INSERT;
                                         if (global.itemID > 0)
                                             id = global.itemID;
-                                            
+
 								if(id!==''){
 									method=SweetFetcher.METHOD_PUT;
 									Separator='/';
 									action=AccessManager.EDIT;
 										data.append('id', id);
 								}
-        
+
 									data.append('title', this.state.title);
 									data.append('area', this.state.selectedAreaValue);
 									data.append('address', this.state.address);
@@ -109,4 +115,3 @@ export default class  placeman_placeManage extends Component<{}> {
             )
     }
 }
-    

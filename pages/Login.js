@@ -158,7 +158,7 @@ const styles = StyleSheet.create(
         container:
             {
 
-                backgroundColor: "#16a091",
+                backgroundColor: "#15be29",
                 height:'100%',
                 width:'100%',
                 justifyContent: 'center',

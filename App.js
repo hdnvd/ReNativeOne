@@ -15,15 +15,16 @@ import trapp_villaReserve from './modules/trapp/pages/villa/trapp_villaReserve'
 import placeman_placeManage from './modules/placeman/pages/place/placeman_placeManage'
 import placeman_placeView from './modules/placeman/pages/place/placeman_placeView'
 import placeman_placeList from './modules/placeman/pages/place/placeman_placeList'
+import placeman_placePhotoManage from './modules/placeman/pages/placephoto/placeman_placephotoManage'
 import trapp_villaList from './modules/trapp/pages/villa/trapp_villaList'
 import trapp_villaownerList from './modules/trapp/pages/villaowner/trapp_villaownerList'
 import sas_unitList from './modules/sas/pages/unit/sas_unitList'
 import posts__posts_postManage from './modules/posts/pages/post/posts_postManage'
 import SelectLocation from './pages/SelectLocation'
-import {AsyncStorage, YellowBox} from 'react-native';
 import Splash from "./pages/Splash";
 import PlaceVerification from "./pages/PlaceVerification";
 import Constants from "./classes/Constants";
+import {AsyncStorage, YellowBox} from 'react-native';
 
 YellowBox.ignoreWarnings(['Warning: ReactNative.createElement']);
 YellowBox.ignoreWarnings(['Warning: ReactNative.IsMounted']);
@@ -38,6 +39,7 @@ const App = createStackNavigator({
     placeman_placeManage: {screen: placeman_placeManage},
     placeman_placeView: {screen: placeman_placeView},
     placeman_placeList: {screen: placeman_placeList},
+    placeman_placePhotoManage: {screen: placeman_placePhotoManage},
     trapp_villaownerList: {screen: trapp_villaownerList},
     trapp_villaView: {screen: trapp_villaView},
     trapp_villaReserve: {screen: trapp_villaReserve},

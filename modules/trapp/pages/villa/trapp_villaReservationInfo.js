@@ -31,9 +31,11 @@ import CheckedRow from '../../../../sweet/components/CheckedRow';
 import SweetHttpRequest from '../../../../classes/sweet-http-request';
 import PersianCalendarPicker from "react-native-persian-calendar-picker";
 import SweetDate from "../../../../classes/SweetDate";
+import LogoTitle from "../../../../components/LogoTitle";
+import SweetPage from "../../../../sweet/components/SweetPage";
 
 
-export default class trapp_villaReservationInfo extends Component<{}> {
+export default class trapp_villaReservationInfo extends SweetPage{
     state =
         {
             orders: [],
@@ -88,11 +90,6 @@ export default class trapp_villaReservationInfo extends Component<{}> {
         // alert(SweetDate.getCurrentTimeJMomentFromDateTimeStamp('1560124800').format("jYYYY/jMM/jDD"));
         const {height: heightOfDeviceScreen} = Dimensions.get('window');
         return (<View style={{flex: 1}}>
-                {/*{this.state.displaySearchPage &&*/}
-                {/*<Trapp_orderSearch*/}
-                {/*dataLoader={SearchFields=>{this._loadData('',SearchFields,true)}}*/}
-                {/*/>*/}
-                {/*}*/}
                 {!this.state.displaySearchPage &&
 
                 <View style={generalStyles.listcontainer}>
@@ -103,14 +100,9 @@ export default class trapp_villaReservationInfo extends Component<{}> {
                             scaleFactor={500}
                             onDateChange={this.onDateChange}
                             disabledDates={this.state.reservedDays}
+                            textStyle={Styles.datepickertext}
                         />
                     </View>
-                    {/*<View style={generalStyles.searchbar}>*/}
-                    {/*<TextInput placeholder='' underlineColorAndroid={'transparent'} style={generalStyles.searchbarinput}*/}
-                    {/*onChangeText={(text) => {*/}
-                    {/*this._loadData(text,this.state.LastSearchFields,true);*/}
-                    {/*}}/>*/}
-                    {/*</View>*/}
                     <View style={generalStyles.listcontainer}>
                         <FlatList
                             data={this.state.orders}
@@ -128,8 +120,6 @@ export default class trapp_villaReservationInfo extends Component<{}> {
                                     <View style={generalStyles.ListItem}>
 
                                         <Text style={generalStyles.simplelabel}>مبلغ پرداختی:{item.priceprc} ریال</Text>
-                                        {/*<Text style={generalStyles.simplelabel}>{item.reservefinancetransactioncontent}</Text>*/}
-                                        {/*<Text style={generalStyles.simplelabel}>{item.cancelfinancetransactioncontent}</Text>*/}
                                         <Text style={generalStyles.simplelabel}>شهر:{item.villacontent}</Text>
                                         <Text style={generalStyles.simplelabel}>وضعیت:{item.orderstatuscontent}</Text>
                                         <Text style={generalStyles.simplelabel}>تاریخ شروع اقامت:{jMoment.utc(moment.unix(item.startdate)).format("jYYYY/jMM/jDD")}</Text>
@@ -153,9 +143,19 @@ const Styles = StyleSheet.create(
             {
                 maxHeight: '50%',
                 height: '50%',
+                backgroundColor: '#b6b4b4',
+                borderRadius:10,
+                padding: 20,
+                marginVertical: 7,
+                marginHorizontal: 7,
             },fulldatecontainer:
             {
                 backgroundColor:'#ee0'
+            },
+        datepickertext:
+            {
+                direction: 'rtl',
+                fontFamily: 'IRANSansMobile',
             }
     }
 );

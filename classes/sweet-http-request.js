@@ -18,7 +18,7 @@ class SweetHttpRequest {
     {
         for(let i=0;Variables!=null && i<Variables.length;i++)
         {
-            console.log(Variables[i][ValueField]);
+            // console.log(Variables[i][ValueField]);
             this.appendVariable(ArrayName+"[]",Variables[i][ValueField]);
         }
     }
@@ -26,7 +26,7 @@ class SweetHttpRequest {
     {
         for(let i=0;Variables!=null && i<Variables.length;i++)
         {
-            console.log(Variables[i][NameField]+PostFix);
+            // console.log(Variables[i][NameField]+PostFix);
             this.appendVariable(Variables[i][NameField]+PostFix,Variables[i][ValueField]);
         }
 

@@ -1,6 +1,20 @@
 import React, {Component} from 'react'
 import { Button } from 'react-native-elements';
-import {StyleSheet, View, Alert, Dimensions,AsyncStorage,Image,TouchableWithoutFeedback,Text,Picker,TextInput,ScrollView,FlatList } from 'react-native';
+import {
+    StyleSheet,
+    View,
+    Alert,
+    Dimensions,
+    AsyncStorage,
+    Image,
+    TouchableWithoutFeedback,
+    Text,
+    Picker,
+    TextInput,
+    ScrollView,
+    FlatList,
+    TouchableHighlight
+} from 'react-native';
 import generalStyles from '../../../../styles/generalStyles';
 import SweetFetcher from '../../../../classes/sweet-fetcher';
 import Common from '../../../../classes/Common';
@@ -18,6 +32,8 @@ import LogoTitle from "../../../../components/LogoTitle";
 
 
 export default class trapp_villaList extends Component<{}> {
+    SORTFIELD_NORMALPRICE='normalpriceprc';
+    SORTFIELD_DISTANCE='distance';
     state =
     {
         villas:[],
@@ -26,7 +42,27 @@ export default class trapp_villaList extends Component<{}> {
         isLoading:false,
         isRefreshing:false,
         displaySearchPage:false,
+        sortField:this.SORTFIELD_NORMALPRICE,
+        // location:{
+        //     "coords":{
+        //         latitude:null,
+        //         longitude:null,
+        //     },
+        // },
+        location:{
+            "coords":
+                {
+                    "longitude":51,
+                    "latitude":35
+                }
+        }
     };
+
+    constructor(props) {
+        super(props);
+        this._findCoordinates();
+    }
+
     static onFindClick: trapp_villaList.onFindClick;
     async componentDidMount() {
         this._loadData('',null,true);
@@ -38,14 +74,30 @@ export default class trapp_villaList extends Component<{}> {
                 this.props.navigation.navigate('trapp_orderList', { name: 'trapp_orderList' });
             }
         });
-    }
-    static navigationOptions =({navigation}) => {
-        const {params = {}} = navigation.state;
-        return {
-            headerLeft: null,
-            headerTitle: <LogoTitle isindex={'1'} onFindClick={params.onFindClick} onReserveListClick={params.onReserveListClick}/>
-        };
 
+    }
+    // static navigationOptions =({navigation}) => {
+    //     const {params = {}} = navigation.state;
+    //     return {
+    //         headerLeft: null,
+    //         headerTitle: <LogoTitle isindex={'1'} onFindClick={params.onFindClick} onReserveListClick={params.onReserveListClick}/>
+    //     };
+    //
+    // };
+    _findCoordinates = () => {
+        // alert("finding");
+        navigator.geolocation.getCurrentPosition(
+            position => {
+                const location = JSON.stringify(position);
+                console.log(location);
+                this.setState({ location:position },()=>{
+                    this._loadData(this.state.SearchText,null,true);
+                });
+
+            },
+            error => Alert.alert(error.message),
+            { enableHighAccuracy: false, timeout: 20000 }
+        );
     };
     _loadData=(SearchText,SearchFields,isRefreshing)=>{
         let {nextStartRow,villas}=this.state;
@@ -56,8 +108,21 @@ export default class trapp_villaList extends Component<{}> {
         }
         this.setState({isRefreshing:isRefreshing,isLoading:true});
         let Request=new SweetHttpRequest();
+        console.log(SearchFields);
         Request.appendVariablesFromObjectKeys(SearchFields);
         Request.appendVariable('__pagesize',Constants.DEFAULT_PAGESIZE);
+        if(this.state.sortField===this.SORTFIELD_NORMALPRICE)
+            Request.appendVariable('normalpriceprc__sort','1');
+        if(this.state.sortField===this.SORTFIELD_DISTANCE)
+            Request.appendVariable('distance__sort','1');
+        try {
+
+            Request.appendVariable('userlatitude',this.state.location.coords.latitude);
+            Request.appendVariable('userlongitude',this.state.location.coords.longitude);
+        }
+        catch (e) {
+
+        }
         Request.appendVariable('__startrow',nextStartRow);
         Request.appendVariable('searchtext',SearchText);
         let filterString=Request.getParamsString();
@@ -77,12 +142,39 @@ export default class trapp_villaList extends Component<{}> {
                     }
                     {!this.state.displaySearchPage &&
                     <View style={generalStyles.listcontainer}>
-                <View style={generalStyles.searchbar}>
-                    <TextInput placeholder='' underlineColorAndroid={'transparent'} style={generalStyles.searchbarinput}
-                               onChangeText={(text) => {
-                                   this._loadData(text,null,true);
-                               }}/>
-                </View>
+
+                        <View style={generalStyles.listTopBar} flexDirection={'row'}>
+
+                            <TouchableHighlight onPress={()=>{this.setState({sortField:this.state.sortField===this.SORTFIELD_NORMALPRICE?this.SORTFIELD_DISTANCE:this.SORTFIELD_NORMALPRICE},()=>{this._loadData(this.state.SearchText,null,true)})}}
+                                                activeOpacity={0.3}
+                                                underlayColor='#ffffff'>
+                            <View style={generalStyles.listTopBarItem}  flexDirection={'row'}>
+                                <View style={this.state.sortField===this.SORTFIELD_DISTANCE?generalStyles.listTopBarItemButtonIconContainerSelected:generalStyles.listTopBarItemButtonIconContainer} >
+                                <Image source={require('../../../../images/distance.png')} style={generalStyles.listTopBarItemButtonIcon} resizeMode={'stretch'}/>
+                                </View>
+                                <View style={this.state.sortField===this.SORTFIELD_NORMALPRICE?generalStyles.listTopBarItemButtonIconContainerSelected:generalStyles.listTopBarItemButtonIconContainer} >
+                                    <Image source={require('../../../../images/dollar.png')} style={generalStyles.listTopBarItemButtonIcon} resizeMode={'stretch'}/>
+                                </View>
+                                <Text style={generalStyles.listTopBarItemText} >مرتب سازی</Text>
+                                <Image source={require('../../../../images/sort.png')} style={generalStyles.listTopBarItemIcon} resizeMode={'stretch'}/>
+                            </View>
+                            </TouchableHighlight>
+                            <TouchableHighlight onPress={()=>{this.setState({displaySearchPage:true})}}
+                                                activeOpacity={0.3}
+                                                underlayColor='#eee'>
+                            <View style={generalStyles.listTopBarItem}  flexDirection={'row'}>
+
+                                <Text style={generalStyles.listTopBarItemText} >جستجو</Text>
+                                <Image source={require('../../../../images/filter.png')} style={generalStyles.listTopBarItemIcon} resizeMode={'stretch'}/>
+                            </View>
+                            </TouchableHighlight>
+                        </View>
+                {/*<View style={generalStyles.searchbar}>*/}
+                    {/*<TextInput placeholder='' underlineColorAndroid={'transparent'} style={generalStyles.searchbarinput}*/}
+                               {/*onChangeText={(text) => {*/}
+                                   {/*this._loadData(text,null,true);*/}
+                               {/*}}/>*/}
+                {/*</View>*/}
                 <View style={generalStyles.listcontainer}>
                     <FlatList
                         data={this.state.villas}
@@ -99,26 +191,30 @@ export default class trapp_villaList extends Component<{}> {
                             }}>
                             <View style={generalStyles.ListItem}>
 
-                <Text style={generalStyles.simplelabel}>{item.roomcountnum}</Text>
-                <Text style={generalStyles.simplelabel}>{item.capacitynum}</Text>
-                <Text style={generalStyles.simplelabel}>{item.maxguestsnum}</Text>
-                <Text style={generalStyles.simplelabel}>{item.structureareanum}</Text>
-                <Text style={generalStyles.simplelabel}>{item.totalareanum}</Text>
-                <Text style={generalStyles.simplelabel}>{item.placemanplacecontent}</Text>
-                <Text style={generalStyles.simplelabel}>{item.addedbyowner}</Text>
+                                {item.hasOwnProperty('distance') &&
+                                <Text
+                                    style={generalStyles.simplelabel}>فاصله:{Math.round(item.distance*100)/100} کیلومتر</Text>
+                                }
+                <Text style={generalStyles.simplelabel}>تعداد اتاق:{item.roomcountnum}</Text>
+                <Text style={generalStyles.simplelabel}>ظرفیت:{item.capacitynum}</Text>
+                {/*<Text style={generalStyles.simplelabel}>{item.maxguestsnum}</Text>*/}
+                {/*<Text style={generalStyles.simplelabel}>{item.structureareanum}</Text>*/}
+                {/*<Text style={generalStyles.simplelabel}>{item.totalareanum}</Text>*/}
+                {/*<Text style={generalStyles.simplelabel}>{item.placemanplacecontent}</Text>*/}
+                {/*<Text style={generalStyles.simplelabel}>{item.addedbyowner}</Text>*/}
                 <Text style={generalStyles.simplelabel}>{item.viewtypecontent}</Text>
                 <Text style={generalStyles.simplelabel}>{item.structuretypecontent}</Text>
-                <Text style={generalStyles.simplelabel}>{item.fulltimeservice}</Text>
-                <Text style={generalStyles.simplelabel}>{item.timestartclk}</Text>
-                <Text style={generalStyles.simplelabel}>{item.owningtypecontent}</Text>
-                <Text style={generalStyles.simplelabel}>{item.areatypecontent}</Text>
-                <Text style={generalStyles.simplelabel}>{item.descriptionte}</Text>
+                {/*<Text style={generalStyles.simplelabel}>{item.fulltimeservice}</Text>*/}
+                {/*<Text style={generalStyles.simplelabel}>{item.timestartclk}</Text>*/}
+                {/*<Text style={generalStyles.simplelabel}>{item.owningtypecontent}</Text>*/}
+                {/*<Text style={generalStyles.simplelabel}>{item.areatypecontent}</Text>*/}
+                {/*<Text style={generalStyles.simplelabel}>{item.descriptionte}</Text>*/}
                 <Image style={generalStyles.listitemthumbnail} source={{uri: Constants.ServerURL+'/'+item.documentphotoigu}}/>
 
-                <Text style={generalStyles.simplelabel}>{item.normalpriceprc}</Text>
-                <Text style={generalStyles.simplelabel}>{item.holidaypriceprc}</Text>
-                <Text style={generalStyles.simplelabel}>{item.weeklyoffnum}</Text>
-                <Text style={generalStyles.simplelabel}>{item.monthlyoffnum}</Text>
+                <Text style={generalStyles.simplelabel}>قیمت روزهای عادی:{item.normalpriceprc}</Text>
+                <Text style={generalStyles.simplelabel}>قیمت روزهای تعطیل:{item.holidaypriceprc}</Text>
+                {/*<Text style={generalStyles.simplelabel}>{item.weeklyoffnum}</Text>*/}
+                {/*<Text style={generalStyles.simplelabel}>{item.monthlyoffnum}</Text>*/}
                             </View>
                             </TouchableWithoutFeedback>
                         }
@@ -130,4 +226,3 @@ export default class trapp_villaList extends Component<{}> {
             );
     }
 }
-    

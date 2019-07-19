@@ -1,12 +1,13 @@
 import React, {Component} from 'react'
 import { Button } from 'react-native-elements';
+import jMoment from "moment-jalaali";
+import moment from "moment";
 import {StyleSheet, View, ScrollView, Dimensions,Linking } from 'react-native';
 import generalStyles from '../../../../styles/generalStyles';
 import SweetFetcher from '../../../../classes/sweet-fetcher';
 import Constants from '../../../../classes/Constants';
 import TextBox from '../../../../sweet/components/TextBox';
 import PersianCalendarPicker from "react-native-persian-calendar-picker";
-import jMoment from "moment-jalaali";
 import TextRow from "../../../../sweet/components/TextRow";
 export default class  trapp_villaReserve extends Component<{}> {
 
@@ -19,10 +20,11 @@ export default class  trapp_villaReserve extends Component<{}> {
             duration:'1',
             selectedStartDate: null,
             price:0,
+            reservedDays:[],
         };
 
         this.onDateChange = this.onDateChange.bind(this);
-        this.loadData();
+        this._loadData();
     }
     onDateChange(date) {
         let DateString=jMoment.utc(date).format("jYYYY/jMM/jDD");
@@ -31,7 +33,7 @@ export default class  trapp_villaReserve extends Component<{}> {
         this.CalculatePrice(DateString,this.state.duration);
 
     }
-    loadData=()=>{
+    _loadData=()=>{
         // if(global.villaId>0){
         //     this.setState({isLoading:true});
         //     new SweetFetcher().Fetch('/trapp/villa/'+global.villaId,SweetFetcher.METHOD_GET, null, data => {
@@ -39,6 +41,13 @@ export default class  trapp_villaReserve extends Component<{}> {
         //         this.setState({roomcount:data.Data.roomcount,capacity:data.Data.capacity,maxguests:data.Data.maxguests,structurearea:data.Data.structurearea,totalarea:data.Data.totalarea,SelectedplacemanplaceValue:data.Data.placemanplace,addedbyowner:data.Data.addedbyowner,SelectedviewtypeValue:data.Data.viewtype,SelectedstructuretypeValue:data.Data.structuretype,fulltimeservice:data.Data.fulltimeservice,timestartclk:data.Data.timestartclk,SelectedowningtypeValue:data.Data.owningtype,SelectedareatypeValue:data.Data.areatype,descriptionte:data.Data.descriptionte,documentphotoigu:data.Data.documentphotoigu,});
         //     });
         // }//IF
+        let url1 = '/trapp/villa/'+global.villaId+'/reserveddays';
+        new SweetFetcher().Fetch(url1, SweetFetcher.METHOD_GET, null, data => {
+            let resD=data.Data.dates.map(dt=>moment.unix(dt));
+            this.setState({
+                reservedDays:resD
+            });
+        });
     };
     openURL = (URL) => {
         Linking.canOpenURL(URL).then(supported => {
@@ -92,6 +101,7 @@ export default class  trapp_villaReserve extends Component<{}> {
                                     style={Styles.datepickercontainer}
                                     scaleFactor={500}
                                     onDateChange={this.onDateChange}
+                                    disabledDates={this.state.reservedDays}
                                 />
                             </View>
                             <TextRow title={'مبلغ کل:'} content={this.state.price}/>

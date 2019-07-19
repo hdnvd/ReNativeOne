@@ -1,17 +1,24 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Alert, ScrollView, Dimensions,AsyncStorage,Text,Image } from 'react-native';
+import {
+    StyleSheet,
+    View,
+    Alert,
+    ScrollView,
+    Dimensions,
+    AsyncStorage,
+    Text,
+    Image,Platform,Linking,
+    TouchableWithoutFeedback, FlatList
+} from 'react-native';
 import generalStyles from '../../../../styles/generalStyles';
 import SweetFetcher from '../../../../classes/sweet-fetcher';
-import Common from '../../../../classes/Common';
-import AccessManager from '../../../../classes/AccessManager';
 import Constants from '../../../../classes/Constants';
 import TextRow from '../../../../sweet/components/TextRow';
 import SweetButton from '../../../../sweet/components/SweetButton';
-import ComponentHelper from '../../../../classes/ComponentHelper';
 import SimpleMap from '../../../../components/SimpleMap';
+import Carousel from 'react-native-snap-carousel';
 
 export default class  trapp_villaView extends Component<{}> {
-    
     constructor(props) {
         super(props);
         this.state =
@@ -23,6 +30,7 @@ export default class  trapp_villaView extends Component<{}> {
                 maxguestsnum:'',
                 structureareanum:'',
                 totalareanum:'',
+                    reservedbyuser:false,
                     placemanplaceinfo:{
                 title:'',
                 description:'',
@@ -43,29 +51,81 @@ export default class  trapp_villaView extends Component<{}> {
                 holidaypriceprc:'',
                 weeklyoffnum:'',
                 monthlyoffnum:'',
+                    villaphotos:[],
                 },
-                
+
             };
-        
+
         this.loadData();
     }
     loadData=()=>{
         this.setState({isLoading:true});
         new SweetFetcher().Fetch('/trapp/villa/'+global.itemID,SweetFetcher.METHOD_GET, null, data => {
             this.setState({LoadedData:data.Data,isLoading:false});
+            new SweetFetcher().Fetch('/placeman/placephoto?place='+data.Data.placemanplace,SweetFetcher.METHOD_GET, null, PhotoData => {
+                this.setState({villaphotos:PhotoData.Data,isLoading:false});
+            });
         });
 
     };
+    _renderItem= ({item, index})=>{
+        return (
+            <View>
+                <Image style={generalStyles.topimagelistitem} source={{uri: Constants.ServerURL+'/'+item.photoigu}}/>
+            </View>
+        );
+    };
+    _openGps = () => {
+        let scheme = Platform.OS === 'ios' ? 'maps:' : 'geo:';
+        let url = scheme + this.state.LoadedData.placemanplaceinfo.latitude+','+this.state.LoadedData.placemanplaceinfo.longitude;
+        console.log(url);
+        this._openURL(url);
+    };
 
+    _openURL = (URL) => {
+        Linking.canOpenURL(URL).then(supported => {
+            if (supported) {
+                Linking.openURL(URL);
+            } else {
+                console.log("Don't know how to open URI: " + URL);
+            }
+        });
+    };
     render() {
+        let Window = Dimensions.get('window');
         const {height: heightOfDeviceScreen} = Dimensions.get('window');
             return (
                 <View style={{flex:1}}  >
                     <ScrollView contentContainerStyle={{minHeight: this.height || heightOfDeviceScreen}}>
-                    
+
                         <View style={generalStyles.container}>
-                        
-                          <Image style={generalStyles.topimage} source={{uri: Constants.ServerURL+'/'+this.state.LoadedData.documentphotoigu}}/>
+                            <Carousel
+                                ref={(c) => { this._carousel = c; }}
+                                data={this.state.villaphotos}
+                                renderItem={this._renderItem}
+                                sliderWidth={Window.width}
+                                itemWidth={Window.width}
+                            />
+                            {/*<FlatList*/}
+                                {/*data={this.state.villaphotos}*/}
+                                {/*showsVerticalScrollIndicator={false}*/}
+                                {/*horizontal={true}*/}
+                                {/*// onEndReached={()=>this._loadData(this.state.SearchText,null,false)}*/}
+                                {/*// onRefresh={()=>this._loadData(this.state.SearchText,null,true)}*/}
+                                {/*// refreshing={this.state.isRefreshing}*/}
+                                {/*keyExtractor={item => item.id}*/}
+                                {/*// onEndReachedThreshold={0.3}*/}
+                                {/*renderItem={({item}) =>*/}
+                                    {/*<TouchableWithoutFeedback onPress={() => {*/}
+                                        {/*global.itemID=item.id;*/}
+                                        {/*this.props.navigation.navigate('trapp_villaView', { name: 'trapp_villaView' });*/}
+                                    {/*}}>*/}
+                                        {/*<View style={generalStyles.ListItem}>*/}
+                                            {/*<Image style={generalStyles.topimagelistitem} source={{uri: Constants.ServerURL+'/'+item.photoigu}}/>*/}
+                                        {/*</View>*/}
+                                    {/*</TouchableWithoutFeedback>*/}
+                                {/*}*/}
+                            {/*/>*/}
 
                             <TextRow title={'تعداد اتاق'} content={this.state.LoadedData.roomcountnum} />
                             <TextRow title={'ظرفیت به نفر'} content={this.state.LoadedData.capacitynum} />
@@ -90,8 +150,21 @@ export default class  trapp_villaView extends Component<{}> {
                                 global.villaId=global.itemID;
                                 this.props.navigation.navigate('trapp_villaReserve', { name: 'trapp_villaReserve' });
                             }}/>
+                            {this.state.LoadedData.reservedbyuser&&
+                            <View>
+                                <SweetButton title={'مشاهده اطلاعات میزبان'} onPress={(onEnd)=>{
+                                    global.villaOwnerUserId=this.state.LoadedData.placemanplaceinfo.user;
+                                    this.props.navigation.navigate('trapp_villaownerView', { name: 'trapp_villaownerView' });
+                                    onEnd(true);
+                                }}/>
+                                <SweetButton title={'مسیریابی ویلا'} onPress={(onEnd)=>{
+                                    this._openGps();
+                                    onEnd(true);
+                                }}/>
+                            </View>
+                            }
                             <View style={generalStyles.mapContainer}>
-                                <SimpleMap style={generalStyles.map} latitude={parseFloat(this.state.LoadedData.placemanplaceinfo.latitude)+0} longitude={parseFloat(this.state.LoadedData.placemanplaceinfo.longitude)+0} />
+                                <SimpleMap blured={!this.state.LoadedData.reservedbyuser} style={generalStyles.map} latitude={parseFloat(this.state.LoadedData.placemanplaceinfo.latitude)+0} longitude={parseFloat(this.state.LoadedData.placemanplaceinfo.longitude)+0} />
                             </View>
                         </View>
                     </ScrollView>
@@ -99,4 +172,3 @@ export default class  trapp_villaView extends Component<{}> {
             )
     }
 }
-    

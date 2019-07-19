@@ -15,11 +15,15 @@ import SweetFetcher from "../../../classes/sweet-fetcher";
 import Common from "../../../classes/Common";
 import Constants from "../../../classes/Constants";
 import TrappUser from "../../trapp/classes/TrappUser";
+import SweetButton from "../../../sweet/components/SweetButton";
 
 export default class Login extends Component<{}> {
-
+    LOGINTYPE_NOTASKED=1;
+    LOGINTYPE_LOGIN=2;
+    LOGINTYPE_REGISTER=3;
+    LOGINTYPE_CODESENT=4;
     static navigationOptions = {
-        headerTitle: <LogoTitle />,
+        headerTitle: <LogoTitle hideMenu={true}/>,
     };
     constructor(props) {
         super(props);
@@ -32,9 +36,11 @@ export default class Login extends Component<{}> {
     };
     state =
         {
+            loginType:this.LOGINTYPE_NOTASKED,
             Password:'',
             phone:'',
             token:'',
+            name:'',
             displayedMessage:false,
         };
 
@@ -44,7 +50,7 @@ export default class Login extends Component<{}> {
         {
             return(
                 <View style={styles.container}>
-                    <Text>در حال بررسی اطلاعات کاربری...</Text>
+                    <Text style={{fontFamily:"IRANSansMobile"}}>در حال بررسی اطلاعات کاربری...</Text>
                 </View>
             );
         }
@@ -52,68 +58,109 @@ export default class Login extends Component<{}> {
         {
             return (
                 <View style={styles.container}>
-                    <TextInput placeholder="شماره موبایل" value={this.state.phone} style={styles.input} underlineColorAndroid={'transparent'} onChangeText={(text) => {
+                    {this.state.loginType === this.LOGINTYPE_NOTASKED &&
+                    <View style={styles.container}>
+                        <SweetButton title="ورود" onPress={(OnEnd) => {
+                            OnEnd(true);
+                            this.setState({loginType:this.LOGINTYPE_LOGIN});
+                        }
+                        }/>
+                        <SweetButton title="ثبت نام" onPress={(OnEnd) => {
+                            OnEnd(true);
+                            this.setState({loginType:this.LOGINTYPE_REGISTER});
+                        }
+                        }/>
+                    </View>
+                    }
+                    {(this.state.loginType === this.LOGINTYPE_REGISTER || this.state.loginType === this.LOGINTYPE_LOGIN) &&
+                        <View style={styles.container}>
+                    {this.state.loginType === this.LOGINTYPE_REGISTER &&
+                    <TextInput placeholder="نام کامل" value={this.state.name} style={styles.input}
+                               underlineColorAndroid={'transparent'} onChangeText={(text) => {
+                        this.setState({name: text});
+                    }}/>
+                    }
+                        <TextInput placeholder="شماره موبایل" value={this.state.phone} style={styles.input} underlineColorAndroid={'transparent'} onChangeText={(text) => {
                         this.setState({phone: text});
                     }}/>
-                    <Button  title="ارسال کد تایید" iconPlacement="right" underlineColorAndroid={'transparent'}  buttonStyle={generalStyles.saveButton}  textStyle={generalStyles.saveButtonText} onPress={(e) => {
+                        <SweetButton title="ارسال کد تایید" onPress={(onEnd) => {
                         const data = new FormData();
                         data.append('phone', this.state.phone);
+                        data.append('name', this.state.name);
                         data.append('appName', Constants.AppName);
                         data.append('role', Constants.DefaultRole);
                         new SweetFetcher().Fetch('/users/sendverificationcode', SweetFetcher.METHOD_POST, data, data => {
-                            alert("کد تایید به شماره موبایل شما ارسال شد.");
-                        }, null, 'users', 'sendverificationcode', this.props.history);
+                        Alert.alert('پیام',"کد تایید به شماره موبایل شما ارسال شد.");
+                            this.setState({loginType:this.LOGINTYPE_CODESENT});
+                        onEnd(true);
+                    }, (error)=>{
+                        Alert.alert('پیام',"خطایی در ارسال کد بوجود آمد");
+                        onEnd(false)}, 'users', 'sendverificationcode', this.props.history);
                     }}/>
+                        </View>
+                    }
+                    {this.state.loginType === this.LOGINTYPE_CODESENT &&
+                    <View style={styles.container}>
+                        <TextInput placeholder="کد تایید" secureTextEntry={true} style={styles.input}
+                                   underlineColorAndroid={'transparent'} onChangeText={(text) => {
+                            this.setState({Password: text});
+                        }}/>
+                        <View>
+                            <View>
+                                <SweetButton title="ورود" onPress={(OnEnd) => {
+                                    // NativeModules.ActivityStarter.navigateToExample();
+                                    const data = new FormData();
+                                    data.append('phone', this.state.phone);
+                                    data.append('name', this.state.name);
+                                    data.append('code', this.state.Password);
+                                    data.append('forceLogin', true);
+                                    data.append('appName', Constants.AppName);
+                                    data.append('role', Constants.DefaultRole);
+                                    new SweetFetcher().Fetch('/users/loginbyphone', SweetFetcher.METHOD_POST, data, data => {
+                                        console.log(data);
 
-                    <TextInput placeholder="کد تایید" secureTextEntry={true} style={styles.input}  underlineColorAndroid={'transparent'} onChangeText={(text) => {
-                    this.setState({Password: text});
-                }}/>
-                    <View >
-                        <View style={{marginTop: '3%'}}>
-                            <Button  title="ورود" iconPlacement="right" underlineColorAndroid={'transparent'}  buttonStyle={generalStyles.saveButton}  textStyle={generalStyles.saveButtonText} onPress={(e) => {
-                                // NativeModules.ActivityStarter.navigateToExample();
-                                const data = new FormData();
-                                data.append('phone', this.state.phone);
-                                data.append('code', this.state.Password);
-                                data.append('forceLogin', true);
-                                data.append('appName', Constants.AppName);
-                                data.append('role', Constants.DefaultRole);
-                                new SweetFetcher().Fetch('/users/loginbyphone', SweetFetcher.METHOD_POST, data, data => {
-                                    console.log(data);
+                                        let RolePart = ['userroles', ''];
+                                        if (!data.Data.roles.empty)
+                                            RolePart = ['userroles', data.Data.roles[0]];
 
-                                    let RolePart=['userroles',''];
-                                    if(!data.Data.roles.empty)
-                                        RolePart=['userroles',data.Data.roles[0]];
+                                        let AsyncStorageObject = [['sessionkey', data.Data.sessionkey], RolePart];
 
-                                    let AsyncStorageObject=[['sessionkey',data.Data.sessionkey],RolePart];
-
-                                    let access=Common.convertObjectPropertiesToLowerCase(data.Data.access);
-                                    let key, keys = Object.keys(access);
-                                    let n = keys.length;
-                                    while (n--) {
-                                        key = keys[n];
-                                        console.log('access.'+access[key].name);
-                                        AsyncStorageObject.push(['access.'+access[key].name,"1"]);
-                                    }
-                                    AsyncStorage.multiSet(AsyncStorageObject).then(result=>{
-                                        console.log("HAAA");
-                                        if (data.Data.sessionkey.length > 2)
-                                        {
-                                            UserMan.SaveToken(data.Data.sessionkey);
-                                            this.setState({'token': data.Data.sessionkey});
-                                            global.isnewprofile=false;
-                                            TrappUser.navigateToUserStartPage(this.props.navigation);
+                                        let access = Common.convertObjectPropertiesToLowerCase(data.Data.access);
+                                        let key, keys = Object.keys(access);
+                                        let n = keys.length;
+                                        while (n--) {
+                                            key = keys[n];
+                                            console.log('access.' + access[key].name);
+                                            AsyncStorageObject.push(['access.' + access[key].name, "1"]);
                                         }
-                                        else
-                                            alert("اطلاعات کاربری صحیح نمی باشد.");
-                                    }).catch(e=>{
-                                        console.log(e);
-                                    });
+                                        AsyncStorage.multiSet(AsyncStorageObject).then(result => {
+                                            console.log("HAAA");
+                                            if (data.Data.sessionkey.length > 2) {
+                                                UserMan.SaveToken(data.Data.sessionkey);
+                                                this.setState({'token': data.Data.sessionkey});
+                                                global.isnewprofile = false;
+                                                OnEnd(true);
+                                                TrappUser.navigateToUserStartPage(this.props.navigation);
+                                            }
+                                            else
+                                                Alert.alert('خطا', "اطلاعات کاربری صحیح نمی باشد.");
+                                            OnEnd(false);
+                                        }).catch(e => {
+                                            console.log(e);
+                                            OnEnd(false);
+                                        });
 
-                                },null,'users','load',this.props.history);
-                            }}/>
+                                    }, (error) => {
+
+                                        OnEnd(false);
+                                        console.log(error);
+                                    }, 'users', 'load', this.props.history);
+
+                                }}/>
+                            </View>
                         </View>
                     </View>
+                    }
                 </View>
             )
         }
@@ -145,7 +192,7 @@ const styles = StyleSheet.create(
         container:
             {
 
-                backgroundColor: "#16a091",
+                backgroundColor: "#15be29",
                 height:'100%',
                 width:'100%',
                 justifyContent: 'center',

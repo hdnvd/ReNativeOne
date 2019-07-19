@@ -1,9 +1,10 @@
 import React from 'react';
 import {
-  Text,
-  StyleSheet,View,Alert
+    Text,
+    StyleSheet, View, Alert, Image
 } from 'react-native';
-import MapView,{Marker} from 'react-native-maps';
+import MapView,{Marker,Circle} from 'react-native-maps';
+import generalStyles from "../styles/generalStyles";
 
 const SimpleMap=props=>{
     // Alert.alert(props.latitude+"");
@@ -22,9 +23,21 @@ const SimpleMap=props=>{
 
 
    style={StyleSheet.absoluteFillObject}>
-        <Marker
-          coordinate={region}
+      {props.blured &&
+        <Circle
+            center={region}
+            radius={150}
+            strokeWidth={3}
+            strokeColor={"#128421"}
+            fillColor={'rgba(21, 190, 41, 0.5)'}
+
         />
+      }
+      {!props.blured &&
+      <Marker
+          coordinate={region}
+      />
+      }
   </MapView>
   </View>
   );

@@ -29,7 +29,7 @@ export default class Splash extends Component<{}> {
                 // this.props.navigation.dispatch(Navigation.resetNavigationAndNavigate('Login'));
             // else if(global.usertype==3)
             //     this.props.navigation.dispatch(Navigation.resetNavigationAndNavigate('MapPage'));
-        }, 3000);
+        }, 300);
     }
 
     componentWillUnmount(){

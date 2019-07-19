@@ -9,6 +9,7 @@ import {Text, View, TextInput, TouchableWithoutFeedback} from 'react-native';
 import generalStyles from "../../styles/generalStyles";
 import DateTimePicker from "react-native-modal-datetime-picker";
 import {Button} from "react-native-elements";
+import SweetButton from "./SweetButton";
 
 export default class LocationSelector extends Component<{}> {
     constructor(props) {
@@ -18,9 +19,10 @@ export default class LocationSelector extends Component<{}> {
     render() {
         return (
             <View  style={{marginTop: '3%'}}>
-                <Button  title={this.props.title} iconPlacement='right' underlineColorAndroid={'transparent'} buttonStyle={generalStyles.saveButton}  textStyle={generalStyles.saveButtonText} onPress={(e) => {
+                <SweetButton  title={this.props.title} onPress={(OnEnd) => {
                     const {navigate} = this.props.navigation;
                     navigate('SelectLocation', {name: 'SelectLocation'});
+                    OnEnd(true);
                 }}/>
             </View>);
     }

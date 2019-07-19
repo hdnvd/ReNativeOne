@@ -15,15 +15,22 @@ import CityAreaSelector from '../../../../sweet/components/CityAreaSelector';
 import SweetButton from '../../../../sweet/components/SweetButton';
 import CheckedRow from '../../../../sweet/components/CheckedRow';
 import ComponentHelper from '../../../../classes/ComponentHelper';
+import LogoTitle from "../../../../components/LogoTitle";
+import SweetPage from "../../../../sweet/components/SweetPage";
 
-export default class  trapp_villaManage extends Component<{}> {
-    
+export default class  trapp_villaManage extends SweetPage {
+    static navigationOptions =({navigation}) => {
+        return {
+            headerLeft: null,
+            headerTitle: <LogoTitle title={'اطلاعات ویلا'} />
+        };
+    };
     constructor(props) {
         super(props);
         this.state =
         {
             isLoading:false,
-            
+
 			roomcountnum:'',
 			capacitynum:'',
 			maxguestsnum:'',
@@ -42,14 +49,14 @@ export default class  trapp_villaManage extends Component<{}> {
 			holidaypriceprc:'',
 			weeklyoffnum:'',
 			monthlyoffnum:'',
-            
+
 			placemanplaceOptions:null,
 			viewtypeOptions:null,
 			structuretypeOptions:null,
 			owningtypeOptions:null,
 			areatypeOptions:null,
         };
-        
+
         this.loadData();
     }
     loadData=()=>{
@@ -73,38 +80,38 @@ export default class  trapp_villaManage extends Component<{}> {
             this.setState({placemanplaceOptions:data.Data});
         });
     };
-                
+
     loadViewtypes = () => {
         new SweetFetcher().Fetch('/trapp/viewtype',SweetFetcher.METHOD_GET, null, data => {
             this.setState({viewtypeOptions:data.Data});
         });
     };
-                
+
     loadStructuretypes = () => {
         new SweetFetcher().Fetch('/trapp/structuretype',SweetFetcher.METHOD_GET, null, data => {
             this.setState({structuretypeOptions:data.Data});
         });
     };
-                
+
     loadOwningtypes = () => {
         new SweetFetcher().Fetch('/trapp/owningtype',SweetFetcher.METHOD_GET, null, data => {
             this.setState({owningtypeOptions:data.Data});
         });
     };
-                
+
     loadAreatypes = () => {
         new SweetFetcher().Fetch('/trapp/areatype',SweetFetcher.METHOD_GET, null, data => {
             this.setState({areatypeOptions:data.Data});
         });
     };
-                
+
     render() {
         const {height: heightOfDeviceScreen} = Dimensions.get('window');
             return (
                 <View style={{flex:1}}  >
                     <ScrollView contentContainerStyle={{minHeight: this.height || heightOfDeviceScreen}}>
                         <View style={generalStyles.container}>
-                        
+
                             <TextBox keyboardType='numeric' title={'تعداد اتاق'} value={this.state.roomcountnum} onChangeText={(text) => {this.setState({roomcountnum: text});}}/>
                             <TextBox keyboardType='numeric' title={'ظرفیت به نفر'} value={this.state.capacitynum} onChangeText={(text) => {this.setState({capacitynum: text});}}/>
                             <TextBox keyboardType='numeric' title={'حداکثر تعداد مهمان'} value={this.state.maxguestsnum} onChangeText={(text) => {this.setState({maxguestsnum: text});}}/>
@@ -169,7 +176,7 @@ export default class  trapp_villaManage extends Component<{}> {
                             <TextBox keyboardType='numeric' title={'تخفیف رزرو بیش از یک هفته'} value={this.state.weeklyoffnum} onChangeText={(text) => {this.setState({weeklyoffnum: text});}}/>
                             <TextBox keyboardType='numeric' title={'تخفیف رزرو بیش از یک ماه'} value={this.state.monthlyoffnum} onChangeText={(text) => {this.setState({monthlyoffnum: text});}}/>
                             <View  style={{marginTop: '3%'}}>
-                                <SweetButton title='ذخیره' onPress={(e) => {
+                                <SweetButton title='ذخیره' onPress={(OnEnd) => {
                                     let formIsValid=true;
                                     if(formIsValid)
                                     {
@@ -180,14 +187,14 @@ export default class  trapp_villaManage extends Component<{}> {
                                         let action=AccessManager.INSERT;
                                         if (global.itemID > 0)
                                             id = global.itemID;
-                                            
+
 								if(id!==''){
 									method=SweetFetcher.METHOD_PUT;
 									Separator='/';
 									action=AccessManager.EDIT;
 										data.append('id', id);
 								}
-        
+
 									data.append('roomcountnum', this.state.roomcountnum);
 									data.append('capacitynum', this.state.capacitynum);
 									data.append('maxguestsnum', this.state.maxguestsnum);
@@ -209,12 +216,17 @@ export default class  trapp_villaManage extends Component<{}> {
 									data.append('weeklyoffnum', this.state.weeklyoffnum);
 									data.append('monthlyoffnum', this.state.monthlyoffnum);
                                         new SweetFetcher().Fetch('/trapp/villa'+Separator+id, method, data, data => {
-                                             if(data.hasOwnProperty('Data'))
+                                            OnEnd(true);
+                                            if(data.hasOwnProperty('Data'))
                                              {
-                                                 Alert.alert('پیام','اطلاعات با موفقیت ذخیره شد.');
+                                                 global.itemID=data.Data.id;
+                                                 // this.props.navigation.navigate('trapp_villaReservationInfo', { name: 'trapp_villaReservationInfo' });
+                                                 this.props.navigation.navigate('placeman_placePhotoManage', { name: 'placeman_placePhotoManage' });
                                              }
-                                        },null,'trapp','villa',this.props.history);
+                                        },error=>{OnEnd(false);},'trapp','villa',this.props.history);
                                     }
+                                    else
+                                        OnEnd(false);
                                 }}/>
                             </View>
 
@@ -224,4 +236,3 @@ export default class  trapp_villaManage extends Component<{}> {
             )
     }
 }
-    

@@ -11,7 +11,7 @@ import SFMan from "../../classes/SFMan";
 
 export default class PickerBox extends Component<{}> {
     render() {
-        console.log("DATA__+_(_()())_+");
+        // console.log("DATA__+_(_()())_+");
         let Options=this.props.options;
         let titleFieldName=this.props.titleFieldName;
         let valueFieldName=this.props.valueFieldName;
@@ -21,8 +21,6 @@ export default class PickerBox extends Component<{}> {
             if (titleFieldName == null)
                 titleFieldName = SFMan.getTitleFieldFromObject(Options[0]);
             Options = Options.map(data => {
-                console.log(data);
-
                 return <Picker.Item label={data[titleFieldName]} value={data[valueFieldName]}/>
             });
         }
