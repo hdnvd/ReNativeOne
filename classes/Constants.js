@@ -6,10 +6,11 @@ class Constants {
     static SERVERMODE_ASP=2;
     static DefaultPageSize=2;
     // static SiteURL="http://77.104.83.68:813";
-    static SiteURL="http://192.168.1.2";
+    // static SiteURL="http://192.168.1.2";
     // static SiteURL="http://jsptutorial.sweetsoft.ir";
     // static SiteURL="http://192.168.43.97";
     // static SiteURL="http://192.168.43.2";
+    static SiteURL="http://10.0.2.2";
     static ServerURL=Constants.SiteURL;
     // static SiteURL="http://localhost";
     // static SiteURL="http://contact.sweetsoft.ir";

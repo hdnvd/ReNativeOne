@@ -17,6 +17,7 @@ import TextRow from '../../../../sweet/components/TextRow';
 import SweetButton from '../../../../sweet/components/SweetButton';
 import SimpleMap from '../../../../components/SimpleMap';
 import Carousel from 'react-native-snap-carousel';
+import TextBox from "../../../../sweet/components/TextBox";
 
 export default class  trapp_villaView extends Component<{}> {
     constructor(props) {
@@ -53,18 +54,21 @@ export default class  trapp_villaView extends Component<{}> {
                 monthlyoffnum:'',
                     villaphotos:[],
                 },
-
+                villaOptions:[],
             };
 
         this.loadData();
     }
     loadData=()=>{
         this.setState({isLoading:true});
-        new SweetFetcher().Fetch('/trapp/villa/'+global.itemID,SweetFetcher.METHOD_GET, null, data => {
+        new SweetFetcher().Fetch('/trapp/villa/'+global.villaID,SweetFetcher.METHOD_GET, null, data => {
             this.setState({LoadedData:data.Data,isLoading:false});
             new SweetFetcher().Fetch('/placeman/placephoto?place='+data.Data.placemanplace,SweetFetcher.METHOD_GET, null, PhotoData => {
                 this.setState({villaphotos:PhotoData.Data,isLoading:false});
             });
+        });
+        new SweetFetcher().Fetch('/trapp/villaoption/byvilla/'+global.villaID,SweetFetcher.METHOD_GET, null, data => {
+            this.setState({villaOptions:data.Data});
         });
 
     };
@@ -117,7 +121,7 @@ export default class  trapp_villaView extends Component<{}> {
                                 {/*// onEndReachedThreshold={0.3}*/}
                                 {/*renderItem={({item}) =>*/}
                                     {/*<TouchableWithoutFeedback onPress={() => {*/}
-                                        {/*global.itemID=item.id;*/}
+                                        {/*global.villaID=item.id;*/}
                                         {/*this.props.navigation.navigate('trapp_villaView', { name: 'trapp_villaView' });*/}
                                     {/*}}>*/}
                                         {/*<View style={generalStyles.ListItem}>*/}
@@ -140,6 +144,9 @@ export default class  trapp_villaView extends Component<{}> {
                             <TextRow title={'نوع اقامتگاه'} content={this.state.LoadedData.owningtypeinfo.name} />
                             <TextRow title={'بافت'} content={this.state.LoadedData.areatypeinfo.name} />
                             <TextRow title={'توضیحات'} content={this.state.LoadedData.descriptionte} />
+                            {this.state.villaOptions.map(dt=>{
+                                return <TextRow title={'تعداد '+dt.name} content={dt.countnum+''}/>
+                            })}
                             <TextRow title={'قیمت در روزهای عادی'} content={this.state.LoadedData.normalpriceprc} />
                             <TextRow title={'قیمت در روزهای تعطیل'} content={this.state.LoadedData.holidaypriceprc} />
                             <TextRow title={'تخفیف رزرو بیش از یک هفته'} content={this.state.LoadedData.weeklyoffnum} />
@@ -147,7 +154,7 @@ export default class  trapp_villaView extends Component<{}> {
                             <TextRow title={'آدرس'} content={this.state.LoadedData.placemanplaceinfo.address} />
                             <TextRow title={'محل'} content={this.state.LoadedData.placemanplaceinfo.provinceinfo.title+' - '+this.state.LoadedData.placemanplaceinfo.cityinfo.title+' - '+this.state.LoadedData.placemanplaceinfo.areainfo.title} />
                             <SweetButton title={'رزرو'} onPress={()=>{
-                                global.villaId=global.itemID;
+                                global.villaId=global.villaID;
                                 this.props.navigation.navigate('trapp_villaReserve', { name: 'trapp_villaReserve' });
                             }}/>
                             {this.state.LoadedData.reservedbyuser&&

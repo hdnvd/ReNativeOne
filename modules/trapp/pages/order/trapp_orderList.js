@@ -81,7 +81,7 @@ export default class trapp_orderList extends Component<{}> {
                             onEndReachedThreshold={0.3}
                             renderItem={({item}) =>
                                 <TouchableWithoutFeedback onPress={() => {
-                                    global.itemID = item.villa;
+                                    global.villaID = item.villa;
                                     this.props.navigation.navigate('trapp_villaView', {name: 'trapp_villaView'});
                                 }}>
                                     <View style={generalStyles.ListItem}>

@@ -297,12 +297,22 @@ export default StyleSheet.create(
             justifyContent: 'center',
             paddingTop: 30,
             paddingHorizontal: 10,
-            borderRadius: 2,
+            borderRadius: 5,
             backgroundColor: "#ffffff",
             fontFamily: 'IRANSansMobile',
             fontSize: 13,
             direction: 'rtl',
-            marginTop: 1,
+            marginHorizontal:3,
+            marginBottom:10,
+            shadowColor: "#565656",
+            shadowOffset: {
+                width: 0,
+                height: 1,
+            },
+            shadowOpacity: 0.22,
+            shadowRadius: 2.22,
+
+            elevation: 3,
         },
         simplelabel:
             {

@@ -34,6 +34,7 @@ import SelectLocation from "../../pages/SelectLocation";
 import PlaceVerification from "../../pages/PlaceVerification";
 import LogoTitle from "../LogoTitle";
 import Common from "../../classes/Common";
+import trapp_villaoptionManage from "../../modules/trapp/pages/villaoption/trapp_villaoptionManage";
 const navOptions =({navigation}) => {
     return {
         headerLeft: null,
@@ -49,8 +50,20 @@ const navOptionsWithNoMenu =({navigation}) => {
     return {
         headerTitle: <LogoTitle hideMenu={true}/>
     };
-
 };
+const getNavOptionsMenuFromTitle=(title)=>
+{
+    return ({navigation}) => {
+        return {
+            headerLeft: null,
+            headerTitle: <LogoTitle title={title} onNavigationClick={() => {
+                // alert("opening");
+                navigation.dispatch(DrawerActions.openDrawer());
+            }}/>
+        };
+
+    }
+}
 const PageToRoute=(InitialRoute,theObject)=>
 {
     let key, keys = Object.keys(theObject);
@@ -66,16 +79,17 @@ const PageToRoute=(InitialRoute,theObject)=>
 let initialRoute={
     Splash:{screen:Splash,navigationOptions:navOptionsWithNoMenu},
     Login:{screen:Login,navigationOptions:navOptionsWithNoMenu},
-    trapp_villaownerManage: {screen:trapp_villaownerManage,navigationOptions:navOptionsWithNoMenu},
-    trapp_villaManage: {screen:trapp_villaManage,navigationOptions:navOptionsWithNoMenu},
-    placeman_placeManage: {screen:placeman_placeManage,navigationOptions:navOptionsWithNoMenu},
+    trapp_villaoptionManage: {screen:trapp_villaoptionManage,navigationOptions:getNavOptionsMenuFromTitle('امکانات ویلا')},
+    trapp_villaownerManage: {screen:trapp_villaownerManage,navigationOptions:getNavOptionsMenuFromTitle('اطلاعات صاحب ویلا')},
+    trapp_villaManage: {screen:trapp_villaManage,navigationOptions:getNavOptionsMenuFromTitle('اطلاعات ویلا')},
+    placeman_placeManage: {screen:placeman_placeManage,navigationOptions:getNavOptionsMenuFromTitle('اطلاعات مکان ویلا')},
+    placeman_placePhotoManage: {screen:placeman_placePhotoManage,navigationOptions:getNavOptionsMenuFromTitle('تصاویر ویلا')},
 };
 const Pages={
     trapp_villaReservationInfo: trapp_villaReservationInfo,
     trapp_orderList: trapp_orderList,
     placeman_placeView:  placeman_placeView,
     placeman_placeList:  placeman_placeList,
-    placeman_placePhotoManage:  placeman_placePhotoManage,
     trapp_villaownerList:  trapp_villaownerList,
     trapp_villaownerView:  trapp_villaownerView,
     trapp_villaView: trapp_villaView,

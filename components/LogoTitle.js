@@ -15,9 +15,14 @@ class LogoTitle extends Component {
         if (global.usertype == 1) {
             return (
                 <View style={styles.topBar}>
-                    {/*<Text*/}
-                        {/*style={styles.toptext}>{this.props.hasOwnProperty('title') ? this.props.title : 'Trapp'}</Text>*/}
-                    <Image source={require('../images/LogoTextWhite.png')} style={styles.logoimg} resizeMode={'stretch'}/>
+                    {this.props.hasOwnProperty('title') &&
+                    <Text
+                        style={styles.toptext}>{this.props.title}</Text>
+                    }
+                    {!this.props.hasOwnProperty('title') &&
+                    <Image source={require('../images/LogoTextWhite.png')} style={styles.logoimg}
+                           resizeMode={'stretch'}/>
+                    }
                     {!this.props.hideMenu &&
                     <TouchableHighlight onPress={this.props.onNavigationClick} style={styles.imgContainerRight}
                                         activeOpacity={0.3}

@@ -41,7 +41,7 @@ export default class  trapp_villaReserve extends Component<{}> {
         //         this.setState({roomcount:data.Data.roomcount,capacity:data.Data.capacity,maxguests:data.Data.maxguests,structurearea:data.Data.structurearea,totalarea:data.Data.totalarea,SelectedplacemanplaceValue:data.Data.placemanplace,addedbyowner:data.Data.addedbyowner,SelectedviewtypeValue:data.Data.viewtype,SelectedstructuretypeValue:data.Data.structuretype,fulltimeservice:data.Data.fulltimeservice,timestartclk:data.Data.timestartclk,SelectedowningtypeValue:data.Data.owningtype,SelectedareatypeValue:data.Data.areatype,descriptionte:data.Data.descriptionte,documentphotoigu:data.Data.documentphotoigu,});
         //     });
         // }//IF
-        let url1 = '/trapp/villa/'+global.villaId+'/reserveddays';
+        let url1 = '/trapp/villa/'+global.villaID+'/reserveddays';
         new SweetFetcher().Fetch(url1, SweetFetcher.METHOD_GET, null, data => {
             let resD=data.Data.dates.map(dt=>moment.unix(dt));
             this.setState({
@@ -65,8 +65,8 @@ export default class  trapp_villaReserve extends Component<{}> {
         {
             const data = new FormData();
             let id = '';
-            if (global.villaId > 0)
-                id = global.villaId;
+            if (global.villaID > 0)
+                id = global.villaID;
             data.append('id', id);
             let method=SweetFetcher.METHOD_GET;
             new SweetFetcher().Fetch('/trapp/villa/price/'+id+"?datestart="+selectedStartDate+"&duration="+Duration, method, data, data => {
@@ -118,8 +118,8 @@ export default class  trapp_villaReserve extends Component<{}> {
                                     {
                                         const data = new FormData();
                                         let id = '';
-                                        if (global.villaId > 0)
-                                            id = global.villaId;
+                                        if (global.villaID > 0)
+                                            id = global.villaID;
                                         data.append('id', id);
                                         let method=SweetFetcher.METHOD_GET;
                                         new SweetFetcher().Fetch('/trapp/villa/reservestart/'+id+"?datestart="+this.state.selectedStartDate+"&duration="+this.state.duration, method, data, data => {

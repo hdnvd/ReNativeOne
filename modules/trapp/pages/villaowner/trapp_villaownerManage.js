@@ -64,13 +64,13 @@ export default class  trapp_villaownerManage extends Component<{}> {
                     <ScrollView contentContainerStyle={{minHeight: this.height || heightOfDeviceScreen}}>
                         <View style={generalStyles.container}>
                             <TextBox title={'نام'} value={this.state.name} onChangeText={(text) => {this.setState({name: text});}}/>
-                            <TextBox keyboardType='numeric' title={'کد ملی'} value={this.state.nationalcodebnum} onChangeText={(text) => {this.setState({nationalcodebnum: text});}}/>
+                            <TextBox keyboardType='numeric' title={'کد ملی'} value={this.state.nationalcodebnum+''} onChangeText={(text) => {this.setState({nationalcodebnum: text});}}/>
                             <TextBox title={'آدرس'} value={this.state.address} onChangeText={(text) => {this.setState({address: text});}}/>
-                            <TextBox keyboardType='numeric' title={'کد شبا'} value={this.state.shabacodebnum} onChangeText={(text) => {this.setState({shabacodebnum: text});}}/>
-                            <TextBox keyboardType='numeric' title={'تلفن'} value={this.state.telbnum} onChangeText={(text) => {this.setState({telbnum: text});}}/>
-                            <TextBox keyboardType='numeric' title={'تلفن شماره ۲'} value={this.state.backuptelbnum} onChangeText={(text) => {this.setState({backuptelbnum: text});}}/>
+                            <TextBox keyboardType='numeric' title={'کد شبا'} value={this.state.shabacodebnum+''} onChangeText={(text) => {this.setState({shabacodebnum: text});}}/>
+                            <TextBox keyboardType='numeric' title={'تلفن'} value={this.state.telbnum+''} onChangeText={(text) => {this.setState({telbnum: text});}}/>
+                            <TextBox keyboardType='numeric' title={'تلفن شماره ۲'} value={this.state.backuptelbnum+''} onChangeText={(text) => {this.setState({backuptelbnum: text});}}/>
                             <TextBox title={'ایمیل'} value={this.state.email} onChangeText={(text) => {this.setState({email: text});}}/>
-                            <TextBox keyboardType='numeric' title={'تلفن همراه شماره ۲'} value={this.state.backupmobilebnum} onChangeText={(text) => {this.setState({backupmobilebnum: text});}}/>
+                            <TextBox keyboardType='numeric' title={'تلفن همراه شماره ۲'} value={this.state.backupmobilebnum+''} onChangeText={(text) => {this.setState({backupmobilebnum: text});}}/>
                             <ImageSelector title='انتخاب تصویر' onConfirm={(path)=>this.setState({SelectedphotoiguLocation : path})} />
                             <ImageSelector title='انتخاب تصویر کارت ملی' onConfirm={(path)=>this.setState({SelectednationalcardiguLocation : path})} />
                             <CityAreaSelector

@@ -5,17 +5,28 @@
  */
 
 import React, { Component } from 'react';
-import {StyleSheet,View,Alert,TextInput,AsyncStorage,Text,NativeModules} from 'react-native';
+import {
+    StyleSheet,
+    View,
+    Alert,
+    TextInput,
+    AsyncStorage,
+    Text,
+    NativeModules,
+    TouchableOpacity,
+    Linking
+} from 'react-native';
 import LogoTitle from "../../../components/LogoTitle";
 import UserMan from "../../../classes/userman";
 import Navigation from "../../../classes/navigation";
-import { Button } from 'react-native-elements';
+import {Button, CheckBox} from 'react-native-elements';
 import generalStyles from '../../../styles/generalStyles'
 import SweetFetcher from "../../../classes/sweet-fetcher";
 import Common from "../../../classes/Common";
 import Constants from "../../../classes/Constants";
 import TrappUser from "../../trapp/classes/TrappUser";
 import SweetButton from "../../../sweet/components/SweetButton";
+import SweetCheckBox from "../../../sweet/components/SweetCheckBox";
 
 export default class Login extends Component<{}> {
     LOGINTYPE_NOTASKED=1;
@@ -28,6 +39,15 @@ export default class Login extends Component<{}> {
     constructor(props) {
         super(props);
     }
+    openURL = (URL) => {
+        Linking.canOpenURL(URL).then(supported => {
+            if (supported) {
+                Linking.openURL(URL);
+            } else {
+                console.log("Don't know how to open URI: " + URL);
+            }
+        });
+    };
     componentDidMount=()=>{
 
         // UserMan.SaveToken('');
@@ -42,6 +62,7 @@ export default class Login extends Component<{}> {
             token:'',
             name:'',
             displayedMessage:false,
+            checkedTerms:false,
         };
 
     render() {
@@ -83,20 +104,80 @@ export default class Login extends Component<{}> {
                         <TextInput placeholder="شماره موبایل" value={this.state.phone} style={styles.input} underlineColorAndroid={'transparent'} onChangeText={(text) => {
                         this.setState({phone: text});
                     }}/>
+                            {this.state.loginType === this.LOGINTYPE_REGISTER &&
+
+                            <View flexDirection={'column'} >
+                            <SweetCheckBox
+                                title='قوانین و مقررات سامانه را خوانده و می پذیرم'
+                                iconType='font-awesome'
+                                checkedIcon='check-square'
+                                uncheckedIcon='square'
+                                uncheckedColor='#cccccc'
+                                checkedColor='#ffffff'
+                                style={{
+                                    direction:'rtl',
+                                    marginVertical: 15,
+                                }}
+                                textStyle={{
+                                    color:'#ffffff',
+                                    fontFamily: 'IRANSansMobile',
+                                marginHorizontal: 10}}
+                                checked={this.state.checkedTerms}
+                                onPress={()=>{this.setState({checkedTerms:!this.state.checkedTerms})}}
+                            />
+                                <TouchableOpacity onPress={()=> {
+
+                                    this.openURL(Constants.SiteURL+"/Terms");
+                                }}>
+                                    <Text style={{
+                                        color:'#fcfcfc',
+                                        fontFamily: 'IRANSansMobile',
+                                        direction:'rtl',
+                                        textAlign:'center',
+                                        marginBottom: 15,
+                                    }}>(قوانین و مقررات)</Text>
+                                </TouchableOpacity>
+                            </View>
+                            }
                         <SweetButton title="ارسال کد تایید" onPress={(onEnd) => {
-                        const data = new FormData();
-                        data.append('phone', this.state.phone);
-                        data.append('name', this.state.name);
-                        data.append('appName', Constants.AppName);
-                        data.append('role', Constants.DefaultRole);
-                        new SweetFetcher().Fetch('/users/sendverificationcode', SweetFetcher.METHOD_POST, data, data => {
-                        Alert.alert('پیام',"کد تایید به شماره موبایل شما ارسال شد.");
-                            this.setState({loginType:this.LOGINTYPE_CODESENT});
-                        onEnd(true);
-                    }, (error)=>{
-                        Alert.alert('پیام',"خطایی در ارسال کد بوجود آمد");
-                        onEnd(false)}, 'users', 'sendverificationcode', this.props.history);
-                    }}/>
+                            let FormIsValid = true;
+                            let invalidFormMessage = "";
+                            if (this.state.loginType === this.LOGINTYPE_REGISTER) {
+                                if (!this.state.checkedTerms) {
+                                    FormIsValid = false;
+                                    invalidFormMessage = 'برای ثبت نام باید قوانین و مقررات سامانه را بپذیرید.';
+                                }
+                                if (this.state.name.length<3) {
+                                    FormIsValid = false;
+                                    invalidFormMessage = 'برای ثبت نام وارد کردن نام کامل اجباری می باشد';
+                                }
+                            }
+                            if (this.state.phone.length!==11) {
+                                FormIsValid = false;
+                                invalidFormMessage = 'لطفا شماره تلفن همراه خود را به طور کامل وارد نمایید';
+                            }
+                            if (!FormIsValid) {
+                                Alert.alert('خطا', invalidFormMessage);
+                                onEnd(false);
+                            }
+                            else {
+                                const data = new FormData();
+                                data.append('phone', this.state.phone);
+                                data.append('name', this.state.name);
+                                data.append('appName', Constants.AppName);
+                                data.append('role', Constants.DefaultRole);
+                                new SweetFetcher().Fetch('/users/sendverificationcode', SweetFetcher.METHOD_POST, data, data => {
+                                    Alert.alert('پیام', "کد تایید به شماره موبایل شما ارسال شد.");
+                                    this.setState({loginType: this.LOGINTYPE_CODESENT});
+                                    onEnd(true);
+                                }, (error) => {
+                                    Alert.alert('پیام', "خطایی در ارسال کد بوجود آمد");
+                                    onEnd(false)
+                                }, 'users', 'sendverificationcode', this.props.history);
+
+                            }
+                        }
+                        }/>
                         </View>
                     }
                     {this.state.loginType === this.LOGINTYPE_CODESENT &&

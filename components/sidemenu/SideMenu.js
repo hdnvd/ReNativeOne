@@ -42,6 +42,12 @@ class SideMenu extends Component {
                                    تصاویر ویلا
                                 </Text>
                             </View>
+
+                            <View style={styles.navSectionStyle}>
+                                <Text style={styles.navItemStyle} onPress={this.navigateToScreen('trapp_villaoptionManage')}>
+                                    امکانات ویلا
+                                </Text>
+                            </View>
                             <View style={styles.navSectionStyle}>
                                 <Text style={styles.navItemStyle} onPress={this.navigateToScreen('trapp_villaReservationInfo')}>
                                     مدیریت ویلا

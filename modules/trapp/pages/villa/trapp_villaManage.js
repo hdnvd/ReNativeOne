@@ -220,6 +220,7 @@ export default class  trapp_villaManage extends SweetPage {
                                             if(data.hasOwnProperty('Data'))
                                              {
                                                  global.itemID=data.Data.id;
+                                                 global.villaID=data.Data.id;
                                                  // this.props.navigation.navigate('trapp_villaReservationInfo', { name: 'trapp_villaReservationInfo' });
                                                  this.props.navigation.navigate('placeman_placePhotoManage', { name: 'placeman_placePhotoManage' });
                                              }

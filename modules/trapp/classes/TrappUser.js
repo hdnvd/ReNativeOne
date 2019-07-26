@@ -41,6 +41,7 @@ export default class TrappUser {
                     {
                         global.placeId=places[0].id;
                         global.itemID=villas[0].id;
+                        global.villaID=villas[0].id;
                         global.ownerId=owners[0].id;
                         // navigation.dispatch(Navigation.resetNavigationAndNavigate('placeman_placePhotoManage'));
                         navigation.dispatch(Navigation.resetNavigationAndNavigate('trapp_villaReservationInfo'));

@@ -120,11 +120,11 @@ export default class trapp_villaReservationInfo extends SweetPage{
                                     <View style={generalStyles.ListItem}>
 
                                         <Text style={generalStyles.simplelabel}>مبلغ پرداختی:{item.priceprc} ریال</Text>
-                                        <Text style={generalStyles.simplelabel}>شهر:{item.villacontent}</Text>
+                                        {/*<Text style={generalStyles.simplelabel}>شهر:{item.villacontent}</Text>*/}
                                         <Text style={generalStyles.simplelabel}>وضعیت:{item.orderstatuscontent}</Text>
                                         <Text style={generalStyles.simplelabel}>تاریخ شروع اقامت:{jMoment.utc(moment.unix(item.startdate)).format("jYYYY/jMM/jDD")}</Text>
                                         <Text style={generalStyles.simplelabel}>مدت اقامت:{item.durationnum} روز</Text>
-                                        <Text style={generalStyles.simplelabel}>تلفن تماس رزرو
+                                        <Text style={generalStyles.simplelabel}>نام رزرو
                                             کننده:{item.usercontent}</Text>
                                     </View>
                                 </TouchableWithoutFeedback>
