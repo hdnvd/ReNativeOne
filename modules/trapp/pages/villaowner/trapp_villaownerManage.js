@@ -17,6 +17,7 @@ import CheckedRow from '../../../../sweet/components/CheckedRow';
 import ComponentHelper from '../../../../classes/ComponentHelper';
 import TextRow from "../../../../sweet/components/TextRow";
 import LogoTitle from "../../../../components/LogoTitle";
+import SweetAlert from "../../../../classes/SweetAlert";
 
 export default class  trapp_villaownerManage extends Component<{}> {
     static navigationOptions =({navigation}) => {
@@ -66,7 +67,7 @@ export default class  trapp_villaownerManage extends Component<{}> {
                             <TextBox title={'نام'} value={this.state.name} onChangeText={(text) => {this.setState({name: text});}}/>
                             <TextBox keyboardType='numeric' title={'کد ملی'} value={this.state.nationalcodebnum+''} onChangeText={(text) => {this.setState({nationalcodebnum: text});}}/>
                             <TextBox title={'آدرس'} value={this.state.address} onChangeText={(text) => {this.setState({address: text});}}/>
-                            <TextBox keyboardType='numeric' title={'کد شبا'} value={this.state.shabacodebnum+''} onChangeText={(text) => {this.setState({shabacodebnum: text});}}/>
+                            <TextBox keyboardType='numeric' title={'کد شبا(بدون خط تیره)'} value={this.state.shabacodebnum+''} onChangeText={(text) => {this.setState({shabacodebnum: text});}}/>
                             <TextBox keyboardType='numeric' title={'تلفن'} value={this.state.telbnum+''} onChangeText={(text) => {this.setState({telbnum: text});}}/>
                             <TextBox keyboardType='numeric' title={'تلفن شماره ۲'} value={this.state.backuptelbnum+''} onChangeText={(text) => {this.setState({backuptelbnum: text});}}/>
                             <TextBox title={'ایمیل'} value={this.state.email} onChangeText={(text) => {this.setState({email: text});}}/>
@@ -110,6 +111,7 @@ export default class  trapp_villaownerManage extends Component<{}> {
                                         new SweetFetcher().Fetch('/trapp/villaowner'+Separator+id, method, data, data => {
                                              if(data.hasOwnProperty('Data'))
                                              {
+
                                                  global.ownerId=data.Data.id;
                                                  this.props.navigation.navigate('placeman_placeManage', { name: 'placeman_placeManage' });
                                                  OnEnd(true);

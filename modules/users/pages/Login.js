@@ -190,52 +190,64 @@ export default class Login extends Component<{}> {
                             <View>
                                 <SweetButton title="ورود" onPress={(OnEnd) => {
                                     // NativeModules.ActivityStarter.navigateToExample();
-                                    const data = new FormData();
-                                    data.append('phone', this.state.phone);
-                                    data.append('name', this.state.name);
-                                    data.append('code', this.state.Password);
-                                    data.append('forceLogin', true);
-                                    data.append('appName', Constants.AppName);
-                                    data.append('role', Constants.DefaultRole);
-                                    new SweetFetcher().Fetch('/users/loginbyphone', SweetFetcher.METHOD_POST, data, data => {
-                                        console.log(data);
-
-                                        let RolePart = ['userroles', ''];
-                                        if (!data.Data.roles.empty)
-                                            RolePart = ['userroles', data.Data.roles[0]];
-
-                                        let AsyncStorageObject = [['sessionkey', data.Data.sessionkey], RolePart];
-
-                                        let access = Common.convertObjectPropertiesToLowerCase(data.Data.access);
-                                        let key, keys = Object.keys(access);
-                                        let n = keys.length;
-                                        while (n--) {
-                                            key = keys[n];
-                                            console.log('access.' + access[key].name);
-                                            AsyncStorageObject.push(['access.' + access[key].name, "1"]);
-                                        }
-                                        AsyncStorage.multiSet(AsyncStorageObject).then(result => {
-                                            console.log("HAAA");
-                                            if (data.Data.sessionkey.length > 2) {
-                                                UserMan.SaveToken(data.Data.sessionkey);
-                                                this.setState({'token': data.Data.sessionkey});
-                                                global.isnewprofile = false;
-                                                OnEnd(true);
-                                                TrappUser.navigateToUserStartPage(this.props.navigation);
-                                            }
-                                            else
-                                                Alert.alert('خطا', "اطلاعات کاربری صحیح نمی باشد.");
-                                            OnEnd(false);
-                                        }).catch(e => {
-                                            console.log(e);
-                                            OnEnd(false);
-                                        });
-
-                                    }, (error) => {
-
+                                    let FormIsValid = true;
+                                    let invalidFormMessage = "";
+                                    if (this.state.Password.length<1) {
+                                        FormIsValid = false;
+                                        invalidFormMessage = 'لطفا کد تایید را که به شماره تلفن همراه شما ارسال شده است وارد نمایید.';
+                                    }
+                                    if (!FormIsValid) {
+                                        Alert.alert('خطا', invalidFormMessage);
                                         OnEnd(false);
-                                        console.log(error);
-                                    }, 'users', 'load', this.props.history);
+                                    }
+                                    else {
+                                        const data = new FormData();
+                                        data.append('phone', this.state.phone);
+                                        data.append('name', this.state.name);
+                                        data.append('code', this.state.Password);
+                                        data.append('forceLogin', true);
+                                        data.append('appName', Constants.AppName);
+                                        data.append('role', Constants.DefaultRole);
+                                        new SweetFetcher().Fetch('/users/loginbyphone', SweetFetcher.METHOD_POST, data, data => {
+                                            console.log(data);
+
+                                            let RolePart = ['userroles', ''];
+                                            if (!data.Data.roles.empty)
+                                                RolePart = ['userroles', data.Data.roles[0]];
+
+                                            let AsyncStorageObject = [['sessionkey', data.Data.sessionkey], RolePart];
+
+                                            let access = Common.convertObjectPropertiesToLowerCase(data.Data.access);
+                                            let key, keys = Object.keys(access);
+                                            let n = keys.length;
+                                            while (n--) {
+                                                key = keys[n];
+                                                console.log('access.' + access[key].name);
+                                                AsyncStorageObject.push(['access.' + access[key].name, "1"]);
+                                            }
+                                            AsyncStorage.multiSet(AsyncStorageObject).then(result => {
+                                                console.log("HAAA");
+                                                if (data.Data.sessionkey.length > 2) {
+                                                    UserMan.SaveToken(data.Data.sessionkey);
+                                                    this.setState({'token': data.Data.sessionkey});
+                                                    global.isnewprofile = false;
+                                                    OnEnd(true);
+                                                    TrappUser.navigateToUserStartPage(this.props.navigation);
+                                                }
+                                                else
+                                                    Alert.alert('خطا', "اطلاعات کاربری صحیح نمی باشد.");
+                                                OnEnd(false);
+                                            }).catch(e => {
+                                                console.log(e);
+                                                OnEnd(false);
+                                            });
+
+                                        }, (error) => {
+
+                                            OnEnd(false);
+                                            console.log(error);
+                                        }, 'users', 'load', this.props.history);
+                                    }
 
                                 }}/>
                             </View>

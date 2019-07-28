@@ -27,6 +27,7 @@ export default class  placeman_placephotoManage extends SweetPage {
             isLoading:false,
             placephotos:[],
 			name:'',
+            photoCount:0,
         };
 
         this._loadData();
@@ -53,7 +54,7 @@ export default class  placeman_placephotoManage extends SweetPage {
                 }
             });
             console.log(placePhotosList);
-            this.setState({placephotos:placePhotosList,isLoading:false});
+            this.setState({placephotos:placePhotosList,isLoading:false,photoCount:placePhotosList.length});
         });
     };
 
@@ -64,37 +65,40 @@ export default class  placeman_placephotoManage extends SweetPage {
                     <ScrollView contentContainerStyle={{minHeight: this.height || heightOfDeviceScreen}}>
                         <View style={generalStyles.container}>
                             <PhotoManageBox photos={this.state.placephotos}/>
-                            <View style={{flex:1,flexDirection:'column'}}>
-                            <ImageSelector title='انتخاب تصویر' onConfirm={(path)=>this.setState({SelectedphotoiguLocation : path})} />
-                            <View>
-                                <SweetButton title='آپلود' onPress={(OnEnd) => {
-                                    let formIsValid=true;
-                                    if(formIsValid)
-                                    {
-                                        const data = new FormData();
-                                        let id = '';
-                                        let method=SweetFetcher.METHOD_POST;
-                                        let Separator='';
-                                        let action=AccessManager.INSERT;
-									data.append('name', 'villaPhoto');
-								ComponentHelper.appendImageSelectorToFormDataIfNotNull(data,'photoigu',this.state.SelectedphotoiguLocation);
-									// data.append('phototype', this.state.SelectedphototypeValue);
-									// data.append('place', this.state.SelectedplaceValue);
-                                        new SweetFetcher().Fetch('/placeman/placephoto'+Separator+id, method, data, data => {
-                                             if(data.hasOwnProperty('Data'))
-                                             {
-                                                 // this.props.navigation.navigate('trapp_villaReservationInfo', { name: 'trapp_villaReservationInfo' });
-                                                 // Alert.alert('پیام','اطلاعات با موفقیت ذخیره شد.');
-                                                 this._loadData();
-                                                 OnEnd(true);
-                                             }
-                                        },(error)=>{OnEnd(false)},'placeman','placephoto',this.props.history);
-                                    }
-                                    else
-                                        OnEnd(false);
-                                }}/>
+                            {this.state.photoCount < 8 &&
+                            <View style={{flex: 1, flexDirection: 'column'}}>
+                                <ImageSelector title='انتخاب تصویر'
+                                               onConfirm={(path) => this.setState({SelectedphotoiguLocation: path})}/>
+                                <View>
+                                    <SweetButton title='آپلود' onPress={(OnEnd) => {
+                                        let formIsValid = true;
+                                        if (formIsValid) {
+                                            const data = new FormData();
+                                            let id = '';
+                                            let method = SweetFetcher.METHOD_POST;
+                                            let Separator = '';
+                                            let action = AccessManager.INSERT;
+                                            data.append('name', 'villaPhoto');
+                                            ComponentHelper.appendImageSelectorToFormDataIfNotNull(data, 'photoigu', this.state.SelectedphotoiguLocation);
+                                            // data.append('phototype', this.state.SelectedphototypeValue);
+                                            // data.append('place', this.state.SelectedplaceValue);
+                                            new SweetFetcher().Fetch('/placeman/placephoto' + Separator + id, method, data, data => {
+                                                if (data.hasOwnProperty('Data')) {
+                                                    // this.props.navigation.navigate('trapp_villaReservationInfo', { name: 'trapp_villaReservationInfo' });
+                                                    // Alert.alert('پیام','اطلاعات با موفقیت ذخیره شد.');
+                                                    this._loadData();
+                                                    OnEnd(true);
+                                                }
+                                            }, (error) => {
+                                                OnEnd(false)
+                                            }, 'placeman', 'placephoto', this.props.history);
+                                        }
+                                        else
+                                            OnEnd(false);
+                                    }}/>
+                                </View>
                             </View>
-                            </View>
+                            }
                             <SweetButton title={'صفحه مدیریت ویلا'} onPress={(OnEnd)=>
                             {
                                 this.props.navigation.navigate('trapp_villaReservationInfo', { name: 'trapp_villaReservationInfo' });

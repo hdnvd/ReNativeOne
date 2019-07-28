@@ -7,9 +7,11 @@ import {
     Dimensions,
     AsyncStorage,
     Text,
-    Image,Platform,Linking,
+    Image,Platform,Linking,Modal,
     TouchableWithoutFeedback, FlatList
 } from 'react-native';
+
+import ImageZoom from 'react-native-image-pan-zoom';
 import generalStyles from '../../../../styles/generalStyles';
 import SweetFetcher from '../../../../classes/sweet-fetcher';
 import Constants from '../../../../classes/Constants';
@@ -62,9 +64,9 @@ export default class  trapp_villaView extends Component<{}> {
     loadData=()=>{
         this.setState({isLoading:true});
         new SweetFetcher().Fetch('/trapp/villa/'+global.villaID,SweetFetcher.METHOD_GET, null, data => {
-            this.setState({LoadedData:data.Data,isLoading:false});
+            this.setState({LoadedData:{...data.Data,villaphotos:[]},isLoading:false});
             new SweetFetcher().Fetch('/placeman/placephoto?place='+data.Data.placemanplace,SweetFetcher.METHOD_GET, null, PhotoData => {
-                this.setState({villaphotos:PhotoData.Data,isLoading:false});
+                this.setState({LoadedData:{...this.state.LoadedData,villaphotos:PhotoData.Data},isLoading:false});
             });
         });
         new SweetFetcher().Fetch('/trapp/villaoption/byvilla/'+global.villaID,SweetFetcher.METHOD_GET, null, data => {
@@ -74,8 +76,13 @@ export default class  trapp_villaView extends Component<{}> {
     };
     _renderItem= ({item, index})=>{
         return (
-            <View>
+            <View style={generalStyles.topimagelistitem}>
+                <ImageZoom cropWidth={Dimensions.get('window').width}
+                           cropHeight={Dimensions.get('window').width/2}
+                           imageWidth={Dimensions.get('window').width}
+                           imageHeight={Dimensions.get('window').width/2}>
                 <Image style={generalStyles.topimagelistitem} source={{uri: Constants.ServerURL+'/'+item.photoigu}}/>
+                </ImageZoom>
             </View>
         );
     };
@@ -98,6 +105,12 @@ export default class  trapp_villaView extends Component<{}> {
     render() {
         let Window = Dimensions.get('window');
         const {height: heightOfDeviceScreen} = Dimensions.get('window');
+        let images=this.state.LoadedData.villaphotos.map(
+            item=>{return {url:Constants.ServerURL+'/'+item.photoigu}}
+        );
+        // console.log('images');
+        // console.log(images);
+        // console.log([{url:'http://10.0.2.2/img/placeman/placephoto/photoigu-13.jpg'},{url:'http://10.0.2.2/img/placeman/placephoto/photoigu-14.jpg'}]);
             return (
                 <View style={{flex:1}}  >
                     <ScrollView contentContainerStyle={{minHeight: this.height || heightOfDeviceScreen}}>
@@ -105,32 +118,15 @@ export default class  trapp_villaView extends Component<{}> {
                         <View style={generalStyles.container}>
                             <Carousel
                                 ref={(c) => { this._carousel = c; }}
-                                data={this.state.villaphotos}
+                                data={this.state.LoadedData.villaphotos}
                                 renderItem={this._renderItem}
                                 sliderWidth={Window.width}
                                 itemWidth={Window.width}
                             />
-                            {/*<FlatList*/}
-                                {/*data={this.state.villaphotos}*/}
-                                {/*showsVerticalScrollIndicator={false}*/}
-                                {/*horizontal={true}*/}
-                                {/*// onEndReached={()=>this._loadData(this.state.SearchText,null,false)}*/}
-                                {/*// onRefresh={()=>this._loadData(this.state.SearchText,null,true)}*/}
-                                {/*// refreshing={this.state.isRefreshing}*/}
-                                {/*keyExtractor={item => item.id}*/}
-                                {/*// onEndReachedThreshold={0.3}*/}
-                                {/*renderItem={({item}) =>*/}
-                                    {/*<TouchableWithoutFeedback onPress={() => {*/}
-                                        {/*global.villaID=item.id;*/}
-                                        {/*this.props.navigation.navigate('trapp_villaView', { name: 'trapp_villaView' });*/}
-                                    {/*}}>*/}
-                                        {/*<View style={generalStyles.ListItem}>*/}
-                                            {/*<Image style={generalStyles.topimagelistitem} source={{uri: Constants.ServerURL+'/'+item.photoigu}}/>*/}
-                                        {/*</View>*/}
-                                    {/*</TouchableWithoutFeedback>*/}
-                                {/*}*/}
-                            {/*/>*/}
-
+                            {/*<Modal visible={true} transparent={false}>*/}
+                            {/*<ImageViewer imageUrls={[{url:'http://10.0.2.2/img/placeman/placephoto/photoigu-13.jpg'},{url:'http://10.0.2.2/img/placeman/placephoto/photoigu-14.jpg'}]}/>*/}
+                            {/*</Modal>*/}
+                            <TextRow title={'کد ویلا'} content={this.state.LoadedData.id} />
                             <TextRow title={'تعداد اتاق'} content={this.state.LoadedData.roomcountnum} />
                             <TextRow title={'ظرفیت به نفر'} content={this.state.LoadedData.capacitynum} />
                             <TextRow title={'حداکثر تعداد مهمان'} content={this.state.LoadedData.maxguestsnum} />

@@ -1,6 +1,21 @@
-// @flow
-import Alert from 'react-native';
+/**
+ * Sample React Native App
+ * https://github.com/facebook/react-native
+ * @flow
+ */
 
+import React, { Component } from 'react';
+import {
+    StyleSheet,
+    View,
+    Alert,
+    TextInput,
+    AsyncStorage,
+    Text,
+    NativeModules,
+    TouchableOpacity,
+    Linking
+} from 'react-native';
 class SweetAlert{
 
     static displayAccessDeniedAlert()
@@ -9,6 +24,7 @@ class SweetAlert{
     }
     static displaySimpleAlert(Title,Text)
     {
+        console.log('displaying Alert:'+Title+":"+Text);
         Alert.alert(Title,Text);
     }
     static displayDeleteAlert(OnConfirmHandler)

@@ -1,4 +1,4 @@
-package com.babimeh;
+package ir.trapp.owner;
 
 import com.facebook.react.ReactActivity;
 

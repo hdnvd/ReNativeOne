@@ -16,7 +16,6 @@ import SweetButton from '../../../../sweet/components/SweetButton';
 import CheckedRow from '../../../../sweet/components/CheckedRow';
 import ComponentHelper from '../../../../classes/ComponentHelper';
 import LogoTitle from "../../../../components/LogoTitle";
-
 export default class  placeman_placeManage extends Component<{}> {
     static navigationOptions =({navigation}) => {
         return {
@@ -70,7 +69,7 @@ export default class  placeman_placeManage extends Component<{}> {
                             {/*onPress={() => this.setState({active: this.state.active==0?1:0})}*/}
                             {/*/>*/}
                             <View  style={{marginTop: '3%'}}>
-                                <SweetButton title='ذخیره' onPress={(e) => {
+                                <SweetButton title='ذخیره' onPress={(OnEnd) => {
                                     let formIsValid=true;
                                     if(formIsValid)
                                     {
@@ -102,9 +101,10 @@ export default class  placeman_placeManage extends Component<{}> {
                                              {
                                                  global.placeId=data.Data.id;
                                                  this.props.navigation.navigate('trapp_villaManage', { name: 'trapp_villaManage' });
+                                                 OnEnd(true);
                                                  // Alert.alert('پیام','اطلاعات با موفقیت ذخیره شد.');
                                              }
-                                        },null,'placeman','place',this.props.history);
+                                        },(error)=>{OnEnd(false)},'placeman','place',this.props.history);
                                     }
                                 }}/>
                             </View>

@@ -117,15 +117,6 @@ export default class  trapp_villaManage extends SweetPage {
                             <TextBox keyboardType='numeric' title={'حداکثر تعداد مهمان'} value={this.state.maxguestsnum} onChangeText={(text) => {this.setState({maxguestsnum: text});}}/>
                             <TextBox keyboardType='numeric' title={'متراژ بنا'} value={this.state.structureareanum} onChangeText={(text) => {this.setState({structureareanum: text});}}/>
                             <TextBox keyboardType='numeric' title={'متراژ کل'} value={this.state.totalareanum} onChangeText={(text) => {this.setState({totalareanum: text});}}/>
-                            {/*<PickerBox*/}
-                                {/*name={'placemanplaces'}*/}
-                                {/*title={'محل'}*/}
-                                {/*selectedValue ={this.state.SelectedplacemanplaceValue}*/}
-                                {/*onValueChange={(value, index) => {*/}
-                                    {/*this.setState({SelectedplacemanplaceValue: value});*/}
-                                {/*}}*/}
-                                {/*options={this.state.placemanplaceOptions}*/}
-                            {/*/>*/}
                             <CheckedRow title='دارای سند مالکیت به نام کاربر' checked={this.state.addedbyowner}
                             onPress={() => this.setState({addedbyowner: this.state.addedbyowner==0?1:0})}
                             />
@@ -185,8 +176,8 @@ export default class  trapp_villaManage extends SweetPage {
                                         let method=SweetFetcher.METHOD_POST;
                                         let Separator='';
                                         let action=AccessManager.INSERT;
-                                        if (global.itemID > 0)
-                                            id = global.itemID;
+                                        if (global.villaID > 0)
+                                            id = global.villaID;
 
 								if(id!==''){
 									method=SweetFetcher.METHOD_PUT;

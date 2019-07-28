@@ -137,13 +137,14 @@ export default class trapp_villaReservationInfo extends SweetPage{
         );
     }
 }
+let Window = Dimensions.get('window');
 const Styles = StyleSheet.create(
     {
         datepickercontainer:
             {
-                maxHeight: '50%',
-                height: '50%',
-                backgroundColor: '#b6b4b4',
+                maxHeight: Window.height*0.4,
+                height:Window.height*0.4,
+                backgroundColor: '#4865b6',
                 borderRadius:10,
                 padding: 20,
                 marginVertical: 7,

@@ -2,13 +2,14 @@ import React, {Component} from 'react'
 import { Button } from 'react-native-elements';
 import jMoment from "moment-jalaali";
 import moment from "moment";
-import {StyleSheet, View, ScrollView, Dimensions,Linking } from 'react-native';
+import {StyleSheet, View, ScrollView, Dimensions, Linking, Text} from 'react-native';
 import generalStyles from '../../../../styles/generalStyles';
 import SweetFetcher from '../../../../classes/sweet-fetcher';
 import Constants from '../../../../classes/Constants';
 import TextBox from '../../../../sweet/components/TextBox';
 import PersianCalendarPicker from "react-native-persian-calendar-picker";
 import TextRow from "../../../../sweet/components/TextRow";
+import SweetButton from "../../../../sweet/components/SweetButton";
 export default class  trapp_villaReserve extends Component<{}> {
 
     constructor(props) {
@@ -95,6 +96,8 @@ export default class  trapp_villaReserve extends Component<{}> {
                             {/*<TextBox title={'حداکثر تعداد مهمان'} value={this.state.maxguests} onChangeText={(text) => {this.setState({maxguests: text});}}/>*/}
                             {/*<TextBox title={'متراژ بنا'} value={this.state.structurearea} onChangeText={(text) => {this.setState({structurearea: text});}}/>*/}
                             {/*<TextBox title={'متراژ کل'} value={this.state.totalarea} onChangeText={(text) => {this.setState({totalarea: text});}}/>*/}
+
+                            <Text style={generalStyles.inputLabel}>تاریخ شروع اقامت</Text>
                             <View style={Styles.datepickercontainer}>
                                 <PersianCalendarPicker
                                     isRTL={true}
@@ -112,7 +115,7 @@ export default class  trapp_villaReserve extends Component<{}> {
                                 {/*}}/>*/}
                             {/*</View>*/}
                             {this.state.price>0 && <View  style={{marginTop: '3%'}}>
-                                <Button title='پرداخت وجه' iconPlacement='right' underlineColorAndroid={'transparent'} buttonStyle={generalStyles.saveButton}  textStyle={generalStyles.saveButtonText}  onPress={(e) => {
+                                <SweetButton title='پرداخت وجه' iconPlacement='right' underlineColorAndroid={'transparent'} buttonStyle={generalStyles.saveButton}  textStyle={generalStyles.saveButtonText}  onPress={(onEnd) => {
                                     let formIsValid=true;
                                     if(formIsValid)
                                     {
@@ -127,9 +130,10 @@ export default class  trapp_villaReserve extends Component<{}> {
                                             {
                                                 let transactionID=data.Data.transaction.transactionid;
                                                 this.openURL(Constants.SiteURL+"/financial/recharge/"+transactionID);
+                                                onEnd(true);
                                                 // console.log('/financial/recharge/'+transactionID);
                                             }
-                                        },null,'trapp','villa',this.props.history);
+                                        },(err)=>{onEnd(false)},'trapp','villa',this.props.history);
                                     }
                                 }}/>
                             </View>
@@ -142,12 +146,26 @@ export default class  trapp_villaReserve extends Component<{}> {
     }
 }
 
+let Window = Dimensions.get('window');
 const Styles=StyleSheet.create(
     {
         datepickercontainer:
             {
-                maxHeight:'50%',
-                height:'50%',
+                maxHeight: Window.height*0.4,
+                height:Window.height*0.4,
+                backgroundColor: '#4865b6',
+                borderRadius:10,
+                padding: 20,
+                marginVertical: 7,
+                marginHorizontal: 7,
+            },fulldatecontainer:
+            {
+                backgroundColor:'#ee0'
+            },
+        datepickertext:
+            {
+                direction: 'rtl',
+                fontFamily: 'IRANSansMobile',
             }
     }
 
