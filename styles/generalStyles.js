@@ -1,4 +1,12 @@
 import {Dimensions, StyleSheet} from "react-native";
+import { NativeModules, Platform } from 'react-native'
+import Constants from "../classes/Constants";
+import Localization from "../classes/Localization";
+//OS
+const isIOS = Platform.OS === 'ios';
+
+// lang:
+const lang = isIOS ? NativeModules.SettingsManager.settings.AppleLocale : NativeModules.I18nManager.localeIdentifier;
 
 let Window = Dimensions.get('window');
 export default StyleSheet.create(
@@ -7,6 +15,7 @@ export default StyleSheet.create(
             {
                 backgroundColor:'#ffffff',
                 height:40,
+                flexDirection:'row'
             },
 
         listTopBarItem:
@@ -18,6 +27,7 @@ export default StyleSheet.create(
                 alignItems: 'center',
                 borderWidth: 0.4,
                 borderColor: '#afafaf',
+                flexDirection:'row',
             },
         listTopBarItemIcon:
             {
@@ -143,11 +153,18 @@ export default StyleSheet.create(
                 backgroundColor: "#fcfcfc",
 
             },
+        containerWithNoBG:
+            {
+                flex: 1,
+                flexGrow: 1,
+
+            },
         mapContainer:
             {
 
-                width: '100%',
+                width:Window.width,
                 height: Window.height / 3,
+
             },
         map:
             {
@@ -158,7 +175,6 @@ export default StyleSheet.create(
 
             flex: 1,
             flexGrow: 1,
-            backgroundColor: "#eeeeee",
         },
         text:
             {
@@ -174,6 +190,7 @@ export default StyleSheet.create(
                 fontSize: 18,
                 fontWeight: '400',
                 fontFamily: 'IRANSansMobile',
+                color:'#ffffff',
             },
         content:
             {
@@ -182,6 +199,7 @@ export default StyleSheet.create(
                 fontSize: 18,
                 fontFamily: 'IRANSansMobile',
                 width: '85%',
+                color:'#ffffff',
             },
         topimage:
             {
@@ -193,7 +211,7 @@ export default StyleSheet.create(
             {
                 paddingHorizontal: 10,
                 paddingVertical: 10,
-                flexDirection: 'row-reverse',
+                flexDirection: Localization.getRowReverseDirection(),
             },
 
         saveButton:
@@ -294,14 +312,13 @@ export default StyleSheet.create(
                 fontSize: 13,
             },
         ListItem: {
-            justifyContent: 'center',
+            justifyContent: Localization.getFlexStart(),
             paddingTop: 30,
+            flexDirection:Localization.getRowReverseDirection(),
+            flexWrap:'wrap',
             paddingHorizontal: 10,
             borderRadius: 5,
             backgroundColor: "#ffffff",
-            fontFamily: 'IRANSansMobile',
-            fontSize: 13,
-            direction: 'rtl',
             marginHorizontal:3,
             marginBottom:10,
             shadowColor: "#565656",
@@ -321,13 +338,25 @@ export default StyleSheet.create(
                 textAlign: 'right',
             },
         listitemthumbnail:
+        Localization.isPhoneRTL()?{
+            width: Window.width*0.40,
+            aspectRatio: 1,
+            position: 'absolute',
+            borderRadius: 20,
+            left:10,
+            top:30,
+            borderWidth: 5,
+            borderColor: '#15be29',
+        }:
             {
-                width: Window.width*0.3,
+                width: Window.width*0.40,
                 aspectRatio: 1,
                 position: 'absolute',
-                borderRadius: 5,
-                left: '1%',
-
+                borderRadius: 20,
+                right:10,
+                top:30,
+                borderWidth: 5,
+                borderColor: '#15be29',
             },
         searchbar:
             {},
@@ -367,6 +396,73 @@ export default StyleSheet.create(
                 fontFamily: 'IRANSansMobile',
                 fontSize: 20,
 
-            }
+            },
+        IconItemStyle:
+            {
+                width:Window.width/5,
+                height:Window.width/5,
+                backgroundColor:'rgba(167,236,131,0.8)',
+                borderRadius:Window.width/10,
+                marginVertical:Window.width*0.02,
+                marginHorizontal:Window.width/17,
+                paddingHorizontal:Window.width/25,
+                paddingVertical:Window.width/25,
+                shadowColor: "#232323",
+                shadowOffset: {
+                    width: -3,
+                    height: 4,
+                },
+                shadowOpacity: 0.9,
+                shadowRadius: 2.22,
+            },
+        IconItemLogo:
+            {
+                width:Window.width*0.09,
+                height:Window.width*0.09,
+                marginHorizontal:Window.width*0.015,
+
+            },
+        IconItemContent:
+            {
+                color: '#ffffff',
+                direction: 'rtl',
+                textAlign: 'center',
+                fontFamily: 'IRANSansMobile',
+                fontSize: 10,
+            },
+        IconItemTitle:
+            {
+                color: '#ffffff',
+                direction: 'rtl',
+                textAlign: 'center',
+                fontFamily: 'IRANSansMobile',
+                fontSize: 10,
+            },
+        datepickercontainer:
+            {
+                maxHeight: Window.height*0.4,
+                height:Window.height*0.4,
+                backgroundColor: '#b5b5b6',
+                borderRadius:10,
+                padding: 20,
+                marginVertical: 7,
+                marginHorizontal: 7,
+            },fulldatecontainer:
+            {
+                backgroundColor:'#ee0'
+            },
+        datepickertext:
+            {
+                direction: 'rtl',
+                fontFamily: 'IRANSansMobile',
+            },
+        ItemLogo:
+            {
+                height: Window.width*0.07,
+                width: Window.width*0.07,
+                marginHorizontal:Window.width*0.01,
+                position: 'relative',
+                right: 0,
+            },
     }
 );

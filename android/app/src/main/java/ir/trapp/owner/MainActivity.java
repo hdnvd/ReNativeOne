@@ -1,4 +1,4 @@
-package ir.trapp.owner;
+package ir.trapp.user;
 
 import com.facebook.react.ReactActivity;
 

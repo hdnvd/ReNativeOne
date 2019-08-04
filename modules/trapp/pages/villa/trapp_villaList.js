@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { Button } from 'react-native-elements';
+import {Button} from 'react-native-elements';
 import {
     StyleSheet,
     View,
@@ -29,34 +29,36 @@ import CheckedRow from '../../../../sweet/components/CheckedRow';
 import Trapp_villaSearch from './Trapp_villaSearch';
 import SweetHttpRequest from '../../../../classes/sweet-http-request';
 import LogoTitle from "../../../../components/LogoTitle";
+import TextRow from "../../../../sweet/components/TextRow";
+import Localization from "../../../../classes/Localization";
 
 
 export default class trapp_villaList extends Component<{}> {
-    SORTFIELD_NORMALPRICE='normalpriceprc';
-    SORTFIELD_DISTANCE='distance';
+    SORTFIELD_NORMALPRICE = 'normalpriceprc';
+    SORTFIELD_DISTANCE = 'distance';
     state =
-    {
-        villas:[],
-        nextStartRow:0,
-        SearchText:'',
-        isLoading:false,
-        isRefreshing:false,
-        displaySearchPage:false,
-        sortField:this.SORTFIELD_NORMALPRICE,
-        // location:{
-        //     "coords":{
-        //         latitude:null,
-        //         longitude:null,
-        //     },
-        // },
-        location:{
-            "coords":
-                {
-                    "longitude":51,
-                    "latitude":35
-                }
-        }
-    };
+        {
+            villas: [],
+            nextStartRow: 0,
+            SearchText: '',
+            isLoading: false,
+            isRefreshing: false,
+            displaySearchPage: false,
+            sortField: this.SORTFIELD_NORMALPRICE,
+            // location:{
+            //     "coords":{
+            //         latitude:null,
+            //         longitude:null,
+            //     },
+            // },
+            location: {
+                "coords":
+                    {
+                        "longitude": 51,
+                        "latitude": 35
+                    }
+            }
+        };
 
     constructor(props) {
         super(props);
@@ -64,18 +66,20 @@ export default class trapp_villaList extends Component<{}> {
     }
 
     static onFindClick: trapp_villaList.onFindClick;
+
     async componentDidMount() {
-        this._loadData('',null,true);
+        this._loadData('', null, true);
         this.props.navigation.setParams({
             onFindClick: () => {
-                this.setState({displaySearchPage:true});
+                this.setState({displaySearchPage: true});
             },
-            onReserveListClick:()=>{
-                this.props.navigation.navigate('trapp_orderList', { name: 'trapp_orderList' });
+            onReserveListClick: () => {
+                this.props.navigation.navigate('trapp_orderList', {name: 'trapp_orderList'});
             }
         });
 
     }
+
     // static navigationOptions =({navigation}) => {
     //     const {params = {}} = navigation.state;
     //     return {
@@ -90,139 +94,184 @@ export default class trapp_villaList extends Component<{}> {
             position => {
                 const location = JSON.stringify(position);
                 console.log(location);
-                this.setState({ location:position },()=>{
-                    this._loadData(this.state.SearchText,null,true);
+                this.setState({location: position}, () => {
+                    this._loadData(this.state.SearchText, null, true);
                 });
 
             },
             error => Alert.alert(error.message),
-            { enableHighAccuracy: false, timeout: 20000 }
+            {enableHighAccuracy: false, timeout: 20000}
         );
     };
-    _loadData=(SearchText,SearchFields,isRefreshing)=>{
-        let {nextStartRow,villas}=this.state;
-        if(isRefreshing)
-        {
-            villas=[];
-            nextStartRow=0;
+    _loadData = (SearchText, SearchFields, isRefreshing) => {
+        let {nextStartRow, villas} = this.state;
+        if (isRefreshing) {
+            villas = [];
+            nextStartRow = 0;
         }
-        this.setState({isRefreshing:isRefreshing,isLoading:true});
-        let Request=new SweetHttpRequest();
+        this.setState({isRefreshing: isRefreshing, isLoading: true});
+        let Request = new SweetHttpRequest();
         console.log(SearchFields);
         Request.appendVariablesFromObjectKeys(SearchFields);
-        Request.appendVariable('__pagesize',Constants.DEFAULT_PAGESIZE);
-        if(this.state.sortField===this.SORTFIELD_NORMALPRICE)
-            Request.appendVariable('normalpriceprc__sort','1');
-        if(this.state.sortField===this.SORTFIELD_DISTANCE)
-            Request.appendVariable('distance__sort','1');
+        Request.appendVariable('__pagesize', Constants.DEFAULT_PAGESIZE);
+        if (this.state.sortField === this.SORTFIELD_NORMALPRICE)
+            Request.appendVariable('normalpriceprc__sort', '1');
+        if (this.state.sortField === this.SORTFIELD_DISTANCE)
+            Request.appendVariable('distance__sort', '1');
         try {
 
-            Request.appendVariable('userlatitude',this.state.location.coords.latitude);
-            Request.appendVariable('userlongitude',this.state.location.coords.longitude);
+            Request.appendVariable('userlatitude', this.state.location.coords.latitude);
+            Request.appendVariable('userlongitude', this.state.location.coords.longitude);
         }
         catch (e) {
 
         }
-        Request.appendVariable('__startrow',nextStartRow);
-        Request.appendVariable('searchtext',SearchText);
-        let filterString=Request.getParamsString();
-        if(filterString!='') filterString='?'+filterString;
-        let url='/trapp/villa'+filterString;
-        new SweetFetcher().Fetch(url,SweetFetcher.METHOD_GET, null, data => {
-            this.setState({villas:[...villas,...data.Data],nextStartRow:nextStartRow+Constants.DEFAULT_PAGESIZE,isLoading:false,isRefreshing:false,SearchText:SearchText,displaySearchPage:false});
+        Request.appendVariable('__startrow', nextStartRow);
+        Request.appendVariable('searchtext', SearchText);
+        let filterString = Request.getParamsString();
+        if (filterString != '') filterString = '?' + filterString;
+        let url = '/trapp/villa' + filterString;
+        new SweetFetcher().Fetch(url, SweetFetcher.METHOD_GET, null, data => {
+            this.setState({
+                villas: [...villas, ...data.Data],
+                nextStartRow: nextStartRow + Constants.DEFAULT_PAGESIZE,
+                isLoading: false,
+                isRefreshing: false,
+                SearchText: SearchText,
+                displaySearchPage: false
+            });
         });
     };
+
     render() {
-        const {height: heightOfDeviceScreen} =  Dimensions.get('window');
-            return (<View style={{flex: 1}}>
-                    {this.state.displaySearchPage &&
-                    <Trapp_villaSearch
-                        dataLoader={SearchFields=>{this._loadData('',SearchFields,true)}}
-                    />
-                    }
-                    {!this.state.displaySearchPage &&
-                    <View style={generalStyles.listcontainer}>
-
-                        <View style={generalStyles.listTopBar} flexDirection={'row'}>
-
-                            <TouchableHighlight onPress={()=>{this.setState({sortField:this.state.sortField===this.SORTFIELD_NORMALPRICE?this.SORTFIELD_DISTANCE:this.SORTFIELD_NORMALPRICE},()=>{this._loadData(this.state.SearchText,null,true)})}}
-                                                activeOpacity={0.3}
-                                                underlayColor='#ffffff'>
-                            <View style={generalStyles.listTopBarItem}  flexDirection={'row'}>
-                                <View style={this.state.sortField===this.SORTFIELD_DISTANCE?generalStyles.listTopBarItemButtonIconContainerSelected:generalStyles.listTopBarItemButtonIconContainer} >
-                                <Image source={require('../../../../images/distance.png')} style={generalStyles.listTopBarItemButtonIcon} resizeMode={'stretch'}/>
-                                </View>
-                                <View style={this.state.sortField===this.SORTFIELD_NORMALPRICE?generalStyles.listTopBarItemButtonIconContainerSelected:generalStyles.listTopBarItemButtonIconContainer} >
-                                    <Image source={require('../../../../images/dollar.png')} style={generalStyles.listTopBarItemButtonIcon} resizeMode={'stretch'}/>
-                                </View>
-                                <Text style={generalStyles.listTopBarItemText} >مرتب سازی</Text>
-                                <Image source={require('../../../../images/sort.png')} style={generalStyles.listTopBarItemIcon} resizeMode={'stretch'}/>
-                            </View>
-                            </TouchableHighlight>
-                            <TouchableHighlight onPress={()=>{this.setState({displaySearchPage:true})}}
-                                                activeOpacity={0.3}
-                                                underlayColor='#eee'>
-                            <View style={generalStyles.listTopBarItem}  flexDirection={'row'}>
-
-                                <Text style={generalStyles.listTopBarItemText} >جستجو</Text>
-                                <Image source={require('../../../../images/filter.png')} style={generalStyles.listTopBarItemIcon} resizeMode={'stretch'}/>
-                            </View>
-                            </TouchableHighlight>
-                        </View>
-                {/*<View style={generalStyles.searchbar}>*/}
-                    {/*<TextInput placeholder='' underlineColorAndroid={'transparent'} style={generalStyles.searchbarinput}*/}
-                               {/*onChangeText={(text) => {*/}
-                                   {/*this._loadData(text,null,true);*/}
-                               {/*}}/>*/}
-                {/*</View>*/}
+        // alert(Localization.isPhoneRTL());
+        const {height: heightOfDeviceScreen} = Dimensions.get('window');
+        let Window=Dimensions.get('window');
+        let captionStyle = {
+            ...StyleSheet.flatten(generalStyles.caption),
+            color: '#333333',
+            fontSize: 10,
+        };
+        let contentStyle = {
+            ...StyleSheet.flatten(generalStyles.content),
+            color: '#333333',
+            fontSize: 10,
+        };
+        let ItemStyle={width: '50%',marginTop: 10};
+        return (<View style={{flex: 1}}>
+                {this.state.displaySearchPage &&
+                <Trapp_villaSearch
+                    dataLoader={SearchFields => {
+                        this._loadData('', SearchFields, true)
+                    }}
+                />
+                }
+                {!this.state.displaySearchPage &&
                 <View style={generalStyles.listcontainer}>
-                    <FlatList
-                        data={this.state.villas}
-                        showsVerticalScrollIndicator={false}
-                        onEndReached={()=>this._loadData(this.state.SearchText,null,false)}
-                        onRefresh={()=>this._loadData(this.state.SearchText,null,true)}
-                        refreshing={this.state.isRefreshing}
-                        keyExtractor={item => item.id}
-                        onEndReachedThreshold={0.3}
-                        renderItem={({item}) =>
-                        <TouchableWithoutFeedback onPress={() => {
-                                global.villaID=item.id;
-                                this.props.navigation.navigate('trapp_villaView', { name: 'trapp_villaView' });
-                            }}>
-                            <View style={generalStyles.ListItem}>
 
-                                {item.hasOwnProperty('distance') &&
-                                <Text
-                                    style={generalStyles.simplelabel}>فاصله:{Math.round(item.distance*100)/100} کیلومتر</Text>
-                                }
-                <Text style={generalStyles.simplelabel}>تعداد اتاق:{item.roomcountnum}</Text>
-                <Text style={generalStyles.simplelabel}>ظرفیت:{item.capacitynum}</Text>
-                {/*<Text style={generalStyles.simplelabel}>{item.maxguestsnum}</Text>*/}
-                {/*<Text style={generalStyles.simplelabel}>{item.structureareanum}</Text>*/}
-                {/*<Text style={generalStyles.simplelabel}>{item.totalareanum}</Text>*/}
-                {/*<Text style={generalStyles.simplelabel}>{item.placemanplacecontent}</Text>*/}
-                {/*<Text style={generalStyles.simplelabel}>{item.addedbyowner}</Text>*/}
-                <Text style={generalStyles.simplelabel}>{item.viewtypecontent}</Text>
-                <Text style={generalStyles.simplelabel}>{item.structuretypecontent}</Text>
-                {/*<Text style={generalStyles.simplelabel}>{item.fulltimeservice}</Text>*/}
-                {/*<Text style={generalStyles.simplelabel}>{item.timestartclk}</Text>*/}
-                {/*<Text style={generalStyles.simplelabel}>{item.owningtypecontent}</Text>*/}
-                {/*<Text style={generalStyles.simplelabel}>{item.areatypecontent}</Text>*/}
-                {/*<Text style={generalStyles.simplelabel}>{item.descriptionte}</Text>*/}
-                <Image style={generalStyles.listitemthumbnail} source={{uri: Constants.ServerURL+'/'+item.documentphotoigu}}/>
+                    <View style={generalStyles.listTopBar}>
 
-                <Text style={generalStyles.simplelabel}>قیمت روزهای عادی:{item.normalpriceprc}</Text>
-                <Text style={generalStyles.simplelabel}>قیمت روزهای تعطیل:{item.holidaypriceprc}</Text>
-                {/*<Text style={generalStyles.simplelabel}>{item.weeklyoffnum}</Text>*/}
-                {/*<Text style={generalStyles.simplelabel}>{item.monthlyoffnum}</Text>*/}
+                        <TouchableHighlight onPress={() => {
+                            this.setState({sortField: this.state.sortField === this.SORTFIELD_NORMALPRICE ? this.SORTFIELD_DISTANCE : this.SORTFIELD_NORMALPRICE}, () => {
+                                this._loadData(this.state.SearchText, null, true)
+                            })
+                        }}
+                                            activeOpacity={0.3}
+                                            underlayColor='#ffffff'>
+                            <View style={generalStyles.listTopBarItem}>
+                                <View
+                                    style={this.state.sortField === this.SORTFIELD_DISTANCE ? generalStyles.listTopBarItemButtonIconContainerSelected : generalStyles.listTopBarItemButtonIconContainer}>
+                                    <Image source={require('../../../../images/distance.png')}
+                                           style={generalStyles.listTopBarItemButtonIcon} resizeMode={'stretch'}/>
+                                </View>
+                                <View
+                                    style={this.state.sortField === this.SORTFIELD_NORMALPRICE ? generalStyles.listTopBarItemButtonIconContainerSelected : generalStyles.listTopBarItemButtonIconContainer}>
+                                    <Image source={require('../../../../images/dollar.png')}
+                                           style={generalStyles.listTopBarItemButtonIcon} resizeMode={'stretch'}/>
+                                </View>
+                                <Text style={generalStyles.listTopBarItemText}>مرتب سازی</Text>
+                                <Image source={require('../../../../images/sort.png')}
+                                       style={generalStyles.listTopBarItemIcon} resizeMode={'stretch'}/>
                             </View>
-                            </TouchableWithoutFeedback>
-                        }
-                    />
-                </View>
+                        </TouchableHighlight>
+                        <TouchableHighlight onPress={() => {
+                            this.setState({displaySearchPage: true})
+                        }}
+                                            activeOpacity={0.3}
+                                            underlayColor='#eee'>
+                            <View style={generalStyles.listTopBarItem} >
+
+                                <Text style={generalStyles.listTopBarItemText}>جستجو</Text>
+                                <Image source={require('../../../../images/filter.png')}
+                                       style={generalStyles.listTopBarItemIcon} resizeMode={'stretch'}/>
+                            </View>
+                        </TouchableHighlight>
+                    </View>
+                    <View style={generalStyles.listcontainer}>
+                        <FlatList
+                            data={this.state.villas}
+                            showsVerticalScrollIndicator={false}
+                            onEndReached={() => this._loadData(this.state.SearchText, null, false)}
+                            onRefresh={() => this._loadData(this.state.SearchText, null, true)}
+                            refreshing={this.state.isRefreshing}
+                            keyExtractor={item => item.id}
+                            onEndReachedThreshold={0.3}
+                            renderItem={({item}) =>
+                                <TouchableWithoutFeedback onPress={() => {
+                                    global.villaID = item.id;
+                                    this.props.navigation.navigate('trapp_villaView', {name: 'trapp_villaView'});
+                                }}>
+                                    <View style={generalStyles.ListItem}>
+                                        <View style={{justifyContent: Localization.getFlexStart(),
+                                            flexDirection:Localization.getRowReverseDirection(),
+                                            flexWrap:'wrap',width:Window.width*0.45,height: StyleSheet.flatten(generalStyles.listitemthumbnail).width+20}}>
+                                        {item.hasOwnProperty('distance') &&
+                                        <TextRow  style={{width: '100%',marginTop: 10}} logo={require('../../files/images/icon/colored/distance.png')}
+                                                 captionStyle={captionStyle} contentStyle={contentStyle} title={''}
+                                                 content={Math.round(item.distance * 100) / 100 + ' کیلومتر'}/>
+                                        }
+                                        <TextRow style={ItemStyle} captionStyle={captionStyle}
+                                                 contentStyle={contentStyle} title={''} content={item.roomcountnum}
+                                                 logo={require('../../files/images/icon/colored/roomcount.png')}/>
+                                        <TextRow style={ItemStyle} captionStyle={captionStyle}
+                                                 contentStyle={contentStyle} title={''} content={item.capacitynum}
+                                                 logo={require('../../files/images/icon/colored/roomcount.png')}/>
+                                        <TextRow  style={ItemStyle} captionStyle={captionStyle} contentStyle={contentStyle} title={''}
+                                                 content={item.viewtypecontent}
+                                                 logo={require('../../files/images/icon/colored/view.png')}/>
+                                        <TextRow  style={ItemStyle} captionStyle={captionStyle} contentStyle={contentStyle} title={''}
+                                                 content={item.structuretypecontent}
+                                                 logo={require('../../files/images/icon/colored/structuretype.png')}/>
+                                        <TextRow  style={ItemStyle} captionStyle={captionStyle} contentStyle={contentStyle} title={''}
+                                                 content={item.normalpriceprc + ' ریال'}
+                                                 logo={require('../../files/images/icon/colored/normalprice.png')}/>
+                                        <TextRow  style={ItemStyle} captionStyle={captionStyle} contentStyle={contentStyle} title={''}
+                                                 content={item.holidaypriceprc + ' ریال'}
+                                                 logo={require('../../../../images/timeiconcolored.png')}/>
+                                        </View>
+                                        <Image style={generalStyles.listitemthumbnail}
+                                               source={{uri: Constants.ServerURL + '/' + item.photo}}/>
+                                    </View>
+                                </TouchableWithoutFeedback>
+                            }
+                        />
+                    </View>
                 </View>
                 }
-                </View>
-            );
+            </View>
+        );
     }
 }
+let Window = Dimensions.get('window');
+const Styles = StyleSheet.create(
+    {
+        ItemLogo:
+            {
+                height: Window.width * 0.05,
+                width: Window.width * 0.05,
+                marginHorizontal: Window.width * 0.01,
+                position: 'relative',
+                right: 0,
+            },
+    }
+);

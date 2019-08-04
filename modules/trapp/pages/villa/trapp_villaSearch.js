@@ -11,7 +11,7 @@ import {
     Picker,
     TextInput,
     ScrollView,
-    FlatList, TouchableHighlight
+    FlatList, TouchableHighlight, ImageBackground
 } from 'react-native';
 import generalStyles from '../../../../styles/generalStyles';
 import SweetFetcher from '../../../../classes/sweet-fetcher';
@@ -29,6 +29,7 @@ import SweetHttpRequest from '../../../../classes/sweet-http-request';
 import PersianCalendarPicker from "react-native-persian-calendar-picker";
 import jMoment from "moment-jalaali";
 import TextRow from "../../../../sweet/components/TextRow";
+import Carousel from "react-native-snap-carousel";
 
 
 export default class Trapp_villaSearch extends Component<{}> {
@@ -104,14 +105,18 @@ export default class Trapp_villaSearch extends Component<{}> {
     render() {
         const {height: heightOfDeviceScreen} = Dimensions.get('window');
         return (<View style={{flex: 1}}>
-                <ScrollView contentContainerStyle={{minHeight: this.height || heightOfDeviceScreen}}>
-                    <View style={generalStyles.container}>
+
+            <ImageBackground source={require('../../../../images/managementBG.png')} style={{width: '100%', height: '100%',
+                position: 'relative',
+                zIndex:2,}}>
+                <ScrollView contentContainerStyle={{minHeight: heightOfDeviceScreen || heightOfDeviceScreen}}>
+                    <View style={generalStyles.containerWithNoBG}>
                         <Text style={generalStyles.inputLabel}>تاریخ شروع اقامت</Text>
 
-                        <View style={Styles.datepickercontainer}>
+                        <View style={generalStyles.datepickercontainer}>
                             <PersianCalendarPicker
                                 isRTL={true}
-                                style={Styles.datepickercontainer}
+                                style={generalStyles.datepickercontainer}
                                 scaleFactor={500}
                                 onDateChange={this.onDateChange}
                             />
@@ -230,6 +235,7 @@ export default class Trapp_villaSearch extends Component<{}> {
                         }}/>
                     </View>
                 </ScrollView>
+            </ImageBackground>
             </View>
         );
     }
@@ -238,10 +244,6 @@ export default class Trapp_villaSearch extends Component<{}> {
 let Window = Dimensions.get('window');
 const Styles = StyleSheet.create(
     {
-        datepickercontainer:
-            {
-                height:Window.height*0.35,
-            },
 
         text:
             {

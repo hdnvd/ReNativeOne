@@ -63,7 +63,7 @@ const getNavOptionsMenuFromTitle=(title)=>
         };
 
     }
-}
+};
 const PageToRoute=(InitialRoute,theObject)=>
 {
     let key, keys = Object.keys(theObject);

@@ -29,7 +29,7 @@ requestStoragePermission();
   static navigationOptions = {
       headerTitle: <LogoTitle />,
     };
-  
+
   render() {
     return (<FormView  navigation={this.props.navigation}/>);
   }

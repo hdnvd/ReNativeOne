@@ -12,7 +12,7 @@ import SelectorMap from '../components/SelectorMap'
 import LogoTitle from '../components/LogoTitle'
 
 export default class SelectLocation extends Component<{}> {
-  
+
   state=
   {
       selectedLocation:{

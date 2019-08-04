@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import styles from './SideMenu.style';
 import {NavigationActions} from 'react-navigation';
-import {Image, ScrollView, Text, View} from 'react-native';
+import {Dimensions, Image, ImageBackground, ScrollView, StyleSheet, Text, View} from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import generalStyles from "../../styles/generalStyles";
 import Constants from "../../classes/Constants";
@@ -17,6 +17,7 @@ class SideMenu extends Component {
 
     render () {
         return (
+            <ImageBackground source={require('../../images/sidebar.png')} style={{width: '100%', height: '100%'}}>
             <View style={styles.container}>
                 <Image style={generalStyles.drawerTopImage} source={require('../../images/Logo.png')}/>
                 <ScrollView>
@@ -81,6 +82,7 @@ class SideMenu extends Component {
                     {/*<Text>This is my fixed footer</Text>*/}
                 {/*</View>*/}
             </View>
+            </ImageBackground>
         );
     }
 }
@@ -88,5 +90,4 @@ class SideMenu extends Component {
 SideMenu.propTypes = {
     navigation: PropTypes.object
 };
-
 export default SideMenu;

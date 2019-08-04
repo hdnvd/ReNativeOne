@@ -1,14 +1,14 @@
 export default {
     container: {
         paddingTop: 20,
-        flex: 1
+        flex: 1,
     },
     navItemStyle: {
         padding: 10,
         direction: 'rtl',
         fontFamily: 'IRANSansMobile',
         backgroundColor:'#ffffff',
-        borderBottomColor: '#bbb',
+        borderBottomColor: '#00ff01',
         borderBottomWidth: 1
     },
     navSectionStyle: {

@@ -12,7 +12,7 @@ import {
     Picker,
     TextInput,
     ScrollView,
-    FlatList
+    FlatList,ImageBackground
 } from 'react-native';
 import jMoment from "moment-jalaali";
 import moment from "moment";
@@ -91,16 +91,17 @@ export default class trapp_villaReservationInfo extends SweetPage{
         const {height: heightOfDeviceScreen} = Dimensions.get('window');
         return (<View style={{flex: 1}}>
                 {!this.state.displaySearchPage &&
+                <ImageBackground source={require('../../../../images/managementBG.png')} style={{width: '100%', height: '100%'}}>
 
                 <View style={generalStyles.listcontainer}>
-                    <View style={Styles.datepickercontainer}>
+                    <View style={generalStyles.datepickercontainer}>
                         <PersianCalendarPicker
                             isRTL={true}
-                            style={Styles.datepickercontainer}
+                            style={generalStyles.datepickercontainer}
                             scaleFactor={500}
                             onDateChange={this.onDateChange}
                             disabledDates={this.state.reservedDays}
-                            textStyle={Styles.datepickertext}
+                            textStyle={generalStyles.datepickertext}
                         />
                     </View>
                     <View style={generalStyles.listcontainer}>
@@ -132,6 +133,7 @@ export default class trapp_villaReservationInfo extends SweetPage{
                         />
                     </View>
                 </View>
+                </ImageBackground>
                 }
             </View>
         );
@@ -140,23 +142,6 @@ export default class trapp_villaReservationInfo extends SweetPage{
 let Window = Dimensions.get('window');
 const Styles = StyleSheet.create(
     {
-        datepickercontainer:
-            {
-                maxHeight: Window.height*0.4,
-                height:Window.height*0.4,
-                backgroundColor: '#4865b6',
-                borderRadius:10,
-                padding: 20,
-                marginVertical: 7,
-                marginHorizontal: 7,
-            },fulldatecontainer:
-            {
-                backgroundColor:'#ee0'
-            },
-        datepickertext:
-            {
-                direction: 'rtl',
-                fontFamily: 'IRANSansMobile',
-            }
+
     }
 );

@@ -30,7 +30,7 @@ export default class SweetButton extends Component<{}> {
     };
     render() {
         return (
-            <View style={generalStyles.SweetButton}>
+            <View style={this.props.style!=null?this.props.style:generalStyles.SweetButton}>
                 <TouchableOpacity onPress={()=> {
                     if (!this.state.waiting)
                     {

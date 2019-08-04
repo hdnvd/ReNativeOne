@@ -7,7 +7,7 @@
 import React, { Component } from 'react';
 import {Text, StyleSheet, View, Alert, Image, ScrollView, Dimensions, TouchableHighlight} from 'react-native';
 import SimpleMap from '../components/SimpleMap'
-import LogoTitle from '../components/LogoTitle'
+import LogoTitle from '..//components/LogoTitle'
 import generalStyles from '../styles/generalStyles'
 import RNFileSelector from "react-native-file-selector";
 import {Button} from "react-native-elements";
@@ -107,7 +107,7 @@ if(global.usertype==2)
 
 
             <View style={styles.cautionContainer}>
-                <Image source={require('../images/police.png')} style={styles.cautionImage} resizeMode={'stretch'}/>
+                <Image source={require('..//images/police.png')} style={styles.cautionImage} resizeMode={'stretch'}/>
                 <Text style={styles.cautionTitle}>هشدار مهم برای امنیت معامله</Text>
                 <Text style={styles.cautionText}>لطفا سفارش را فقط به صورت حضوری انجام دهید و پیش از آن هیچ مبلغی را واریز نکنید.</Text>
             </View>
